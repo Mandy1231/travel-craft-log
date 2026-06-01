@@ -53,6 +53,7 @@ export const Route = createFileRoute("/_authenticated/trips/$tripId")({
 const DAY_VARS = ["--day-1", "--day-2", "--day-3", "--day-4", "--day-5", "--day-6", "--day-7"];
 
 function TripDetail() {
+  const { t } = useTranslation();
   const { tripId } = Route.useParams();
   const navigate = useNavigate();
   const trip = useTrip(tripId);
@@ -70,10 +71,10 @@ function TripDetail() {
   if (!trip) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-24 text-center">
-        <h1 className="font-display text-3xl">行程未找到</h1>
-        <p className="mt-2 text-muted-foreground">这个行程可能已被删除。</p>
+        <h1 className="font-display text-3xl">{t("trips.notFound")}</h1>
+        <p className="mt-2 text-muted-foreground">{t("trips.notFoundDesc")}</p>
         <Link to="/" className="mt-6 inline-block">
-          <Button>返回首页</Button>
+          <Button>{t("trips.goHome")}</Button>
         </Link>
       </div>
     );
@@ -83,9 +84,9 @@ function TripDetail() {
     const url = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("链接已复制到剪贴板");
+      toast.success(t("trips.linkCopied"));
     } catch {
-      toast.error("复制失败");
+      toast.error(t("trips.copyFailed"));
     }
   };
 
@@ -98,7 +99,7 @@ function TripDetail() {
 
   const startEditDay = (day: Day, idx: number) => {
     setEditingDayId(day.id);
-    setEditingDayTitle(day.title ?? `第 ${idx + 1} 天`);
+    setEditingDayTitle(day.title ?? t("trips.dayN", { n: idx + 1 }));
   };
   const commitEditDay = () => {
     if (editingDayId) {
@@ -109,20 +110,19 @@ function TripDetail() {
 
   return (
     <main className="mx-auto max-w-7xl px-5 pb-24 pt-8 sm:px-8">
-      {/* Top bar */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <button
           onClick={() => navigate({ to: "/" })}
           className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-          全部行程
+          {t("trips.allTrips")}
         </button>
 
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleShare}>
             <Share2 className="mr-1.5 h-4 w-4" />
-            分享
+            {t("common.share")}
           </Button>
           <Button
             variant={trip.visibility === "public" ? "default" : "outline"}
@@ -130,30 +130,29 @@ function TripDetail() {
             onClick={() => {
               const next = trip.visibility === "public" ? "private" : "public";
               tripsApi.update(trip.id, { visibility: next });
-              toast.success(next === "public" ? "已设为公开" : "已设为私密");
+              toast.success(next === "public" ? t("trips.setPublicToast") : t("trips.setPrivateToast"));
             }}
           >
-            👥 {trip.visibility === "public" ? "公开" : "设为公开"}
+            👥 {trip.visibility === "public" ? t("trips.public") : t("trips.setPublic")}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => {
               tripsApi.duplicate(trip.id);
-              toast.success("已复制此计划");
+              toast.success(t("trips.duplicateToast"));
             }}
           >
             <Copy className="mr-1.5 h-4 w-4" />
-            复制
+            {t("common.copy")}
           </Button>
           <Button variant="outline" size="sm" onClick={() => setEditTripOpen(true)}>
             <Pencil className="mr-1.5 h-4 w-4" />
-            编辑
+            {t("common.edit")}
           </Button>
         </div>
       </div>
 
-      {/* Header */}
       <header className="mb-8 flex items-start gap-5">
         <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-gradient-hero text-5xl shadow-lift">
           {trip.coverEmoji}
@@ -173,17 +172,16 @@ function TripDetail() {
                 {trip.endDate ? ` — ${trip.endDate.replaceAll("-", "/")}` : ""}
               </span>
             ) : (
-              <span className="italic">未设定日期</span>
+              <span className="italic">{t("trips.noDates")}</span>
             )}
             <span>·</span>
             <span>
-              {trip.days.length} 天 · {totalSpots} 个景点
+              {trip.days.length} {t("trips.daysSuffix")} · {totalSpots} {t("trips.spotsSuffix")}
             </span>
           </div>
         </div>
       </header>
 
-      {/* Body grid */}
       <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
         <section className="lg:sticky lg:top-6 lg:self-start">
           <MapPreview days={trip.days} />
@@ -191,10 +189,10 @@ function TripDetail() {
 
         <section className="rounded-3xl border border-primary/10 bg-card/80 p-4 shadow-soft backdrop-blur sm:p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-2xl">📅 行程安排</h2>
+            <h2 className="font-display text-2xl">{t("trips.schedule")}</h2>
             <Button size="sm" onClick={() => tripsApi.addDay(trip.id)} className="shadow-soft">
               <Plus className="mr-1 h-4 w-4" />
-              添加新一天
+              {t("trips.addDay")}
             </Button>
           </div>
 
@@ -246,7 +244,7 @@ function TripDetail() {
                           className="group flex min-w-0 flex-1 items-center gap-2 text-left"
                         >
                           <h3 className="truncate font-display text-base font-semibold">
-                            {day.title || `第 ${idx + 1} 天`}
+                            {day.title || t("trips.dayN", { n: idx + 1 })}
                           </h3>
                           {date && (
                             <span className="shrink-0 text-xs text-muted-foreground">
@@ -267,7 +265,7 @@ function TripDetail() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => startEditDay(day, idx)}>
                             <Pencil className="mr-2 h-3.5 w-3.5" />
-                            编辑标题
+                            {t("trips.editTitle")}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -275,7 +273,7 @@ function TripDetail() {
                             onClick={() => tripsApi.removeDay(trip.id, day.id)}
                           >
                             <Trash2 className="mr-2 h-3.5 w-3.5" />
-                            删除这一天
+                            {t("trips.deleteDay")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
