@@ -143,7 +143,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
     };
   }, []);
 
-  // fetch OSRM route when filtered
+  // Fetch the geometry once per day selection (driving profile only).
   useEffect(() => {
     if (!isFiltered || selectedPts.length < 2) {
       setOsrmRoute(null);
@@ -152,7 +152,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
     }
     const ctrl = new AbortController();
     setRouteStatus("loading");
-    fetchOsrmRoute(selectedPts, mode, ctrl.signal)
+    fetchOsrmRoute(selectedPts, ctrl.signal)
       .then((r) => {
         if (ctrl.signal.aborted) return;
         setOsrmRoute(r);
@@ -164,7 +164,25 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
         setRouteStatus("error");
       });
     return () => ctrl.abort();
-  }, [isFiltered, selectedPts, mode]);
+  }, [isFiltered, selectedPts]);
+
+  // Straight-line distance fallback (used when OSRM hasn't returned yet or failed).
+  const straightKm = useMemo(() => {
+    let d = 0;
+    for (let i = 1; i < selectedPts.length; i++) d += haversine(selectedPts[i - 1], selectedPts[i]);
+    return d;
+  }, [selectedPts]);
+
+  const routeKm = osrmRoute?.km ?? straightKm;
+  const recommendedMode = useMemo<TransitMode>(
+    () => recommendModeForDistance(routeKm),
+    [routeKm],
+  );
+
+  // Reset selection to the recommended mode whenever the day or distance changes.
+  useEffect(() => {
+    if (isFiltered) setMode(recommendedMode);
+  }, [isFiltered, selectedDayId, recommendedMode]);
 
   // render markers + polylines
   useEffect(() => {
