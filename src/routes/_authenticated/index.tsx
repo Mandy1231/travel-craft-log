@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus,
   Calendar,
@@ -31,12 +32,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/_authenticated/")({
-  head: () => ({
-    meta: [
-      { title: "我的旅行计划 · Wayfarer" },
-      { name: "description", content: "管理你的所有旅行计划,从灵感到行程。" },
-    ],
-  }),
   component: Index,
 });
 
@@ -56,14 +51,14 @@ function dayCount(t: Trip) {
   return t.days.length;
 }
 
-const FILTERS: { value: Visibility | "all"; label: string }[] = [
-  { value: "all", label: "全部" },
-  { value: "private", label: "私人" },
-  { value: "public", label: "公开" },
-  { value: "draft", label: "草稿" },
-];
-
 function Index() {
+  const { t } = useTranslation();
+  const FILTERS: { value: Visibility | "all"; label: string }[] = [
+    { value: "all", label: t("trips.filterAll") },
+    { value: "private", label: t("trips.filterPrivate") },
+    { value: "public", label: t("trips.filterPublic") },
+    { value: "draft", label: t("trips.filterDraft") },
+  ];
   const trips = useTrips();
   const [createOpen, setCreateOpen] = useState(false);
   const [editTrip, setEditTrip] = useState<Trip | null>(null);
@@ -89,11 +84,11 @@ function Index() {
     });
   }, [trips, q, filter]);
 
-  const handleShare = (t: Trip) => {
-    const url = `${window.location.origin}/trips/${t.id}`;
+  const handleShare = (trip: Trip) => {
+    const url = `${window.location.origin}/trips/${trip.id}`;
     navigator.clipboard.writeText(url).then(
-      () => toast.success("分享链接已复制"),
-      () => toast.error("复制失败"),
+      () => toast.success(t("trips.linkCopied")),
+      () => toast.error(t("trips.copyFailed")),
     );
   };
 
@@ -103,28 +98,27 @@ function Index() {
         <div>
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-card/80 px-3 py-1 text-xs font-medium text-primary shadow-soft backdrop-blur">
             <Compass className="h-3.5 w-3.5" />
-            Wayfarer · 旅行规划器
+            {t("trips.heroTagline")}
           </div>
           <h1 className="bg-gradient-hero bg-clip-text text-5xl font-semibold tracking-tight text-transparent sm:text-6xl">
-            🧳 我的旅行计划
+            {t("trips.heroTitle")}
           </h1>
           <p className="mt-3 max-w-lg text-base text-muted-foreground">
-            把每一段旅程串成回忆。规划路线、收藏景点、与朋友分享。
+            {t("trips.heroSub")}
           </p>
         </div>
 
         <Button size="lg" onClick={() => setCreateOpen(true)} className="shadow-lift">
           <Plus className="mr-1.5 h-4 w-4" />
-          创建新计划
+          {t("trips.create")}
         </Button>
       </header>
 
-      {/* Search + filter */}
       <div className="mb-8 flex flex-col gap-3 rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="搜索计划、景点..."
+            placeholder={t("trips.searchPlaceholder")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="border-0 bg-transparent pl-9 shadow-none focus-visible:ring-0"
@@ -151,10 +145,10 @@ function Index() {
         <div className="grid place-items-center rounded-3xl border-2 border-dashed border-primary/20 bg-gradient-sky/40 px-6 py-24 text-center">
           <Sparkles className="mb-3 h-10 w-10 text-primary/60" />
           <p className="text-lg font-medium text-primary">
-            {trips.length === 0 ? "还没有计划。开启第一段旅程吧。" : "没有匹配的计划"}
+            {trips.length === 0 ? t("trips.emptyNoTrips") : t("trips.emptyNoMatches")}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            {trips.length === 0 ? "点击右上角创建新计划" : "试着调整搜索或筛选"}
+            {trips.length === 0 ? t("trips.emptyHintNew") : t("trips.emptyHintSearch")}
           </p>
         </div>
       ) : (
@@ -187,17 +181,17 @@ function Index() {
                             <span>{range}</span>
                           </>
                         ) : (
-                          <span className="italic">计划中...</span>
+                          <span className="italic">{t("trips.planning")}</span>
                         )}
                       </div>
                       {(range || spotCount > 0) && (
                         <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
-                          {range && <span>{dayCount(trip)} 天</span>}
+                          {range && <span>{dayCount(trip)} {t("trips.daysSuffix")}</span>}
                           {range && spotCount > 0 && <span>·</span>}
                           {spotCount > 0 && (
                             <span className="inline-flex items-center gap-1">
                               <MapPin className="h-3 w-3" />
-                              {spotCount} 个景点
+                              {spotCount} {t("trips.spotsSuffix")}
                             </span>
                           )}
                         </div>
@@ -213,7 +207,7 @@ function Index() {
                         className="w-full text-primary hover:bg-primary/10 hover:text-primary"
                       >
                         <Eye className="mr-1 h-3.5 w-3.5" />
-                        查看
+                        {t("common.view")}
                       </Button>
                     </Link>
                     <Button
@@ -230,7 +224,7 @@ function Index() {
                       className="text-muted-foreground hover:text-foreground"
                       onClick={() => {
                         tripsApi.duplicate(trip.id);
-                        toast.success("已复制计划");
+                        toast.success(t("trips.duplicated"));
                       }}
                     >
                       <Copy className="h-3.5 w-3.5" />
@@ -278,18 +272,16 @@ function Index() {
       <AlertDialog open={!!deleteTrip} onOpenChange={(v) => !v && setDeleteTrip(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>删除「{deleteTrip?.title}」?</AlertDialogTitle>
-            <AlertDialogDescription>
-              这个行程的所有日程和景点都会一并删除,操作无法撤销。
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("trips.deleteTitle", { title: deleteTrip?.title ?? "" })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("trips.deleteDesc")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteTrip && tripsApi.remove(deleteTrip.id)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              删除
+              {t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

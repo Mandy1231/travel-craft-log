@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Compass, LogOut, User } from "lucide-react";
@@ -11,11 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
-    // Client-side auth (Supabase session lives in localStorage)
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getUser();
     if (!data.user) {
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthedLayout() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -43,7 +45,7 @@ function AuthedLayout() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    toast.success("已退出登录");
+    toast.success(t("auth.signedOut"));
   };
 
   return (
@@ -54,30 +56,33 @@ function AuthedLayout() {
             <Compass className="h-4 w-4" />
             Wayfarer
           </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2">
-                <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-hero text-xs font-semibold text-white">
-                  {email?.[0]?.toUpperCase() ?? "?"}
-                </div>
-                <span className="hidden text-sm sm:inline">{email ?? "..."}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">
-                {email}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem disabled>
-                <User className="mr-2 h-4 w-4" />
-                个人资料
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                退出登录
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-hero text-xs font-semibold text-white">
+                    {email?.[0]?.toUpperCase() ?? "?"}
+                  </div>
+                  <span className="hidden text-sm sm:inline">{email ?? "..."}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">
+                  {email}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem disabled>
+                  <User className="mr-2 h-4 w-4" />
+                  {t("common.profile")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  {t("common.logout")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </header>
       <Outlet />

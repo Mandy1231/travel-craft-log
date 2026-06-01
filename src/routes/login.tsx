@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Compass, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -14,14 +16,15 @@ export const Route = createFileRoute("/login")({
   }),
   head: () => ({
     meta: [
-      { title: "登录 · Wayfarer" },
-      { name: "description", content: "登录 Wayfarer,管理你的旅行计划。" },
+      { title: "Wayfarer · Sign in" },
+      { name: "description", content: "Sign in to Wayfarer to manage your trips." },
     ],
   }),
   component: LoginPage,
 });
 
 function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -43,7 +46,7 @@ function LoginPage() {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success("欢迎回来");
+        toast.success(t("auth.welcomeBack"));
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -54,11 +57,12 @@ function LoginPage() {
           },
         });
         if (error) throw error;
-        toast.success("账号已创建");
+        toast.success(t("auth.accountCreated"));
       }
       navigate({ to: redirect, replace: true });
-    } catch (err: any) {
-      toast.error(err.message ?? "操作失败");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -67,34 +71,37 @@ function LoginPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-gradient-sky px-5 py-12">
       <div className="w-full max-w-md">
-        <Link to="/" className="mb-8 flex items-center justify-center gap-2 text-primary">
-          <Compass className="h-5 w-5" />
-          <span className="font-display text-2xl font-semibold">Wayfarer</span>
-        </Link>
+        <div className="mb-6 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 text-primary">
+            <Compass className="h-5 w-5" />
+            <span className="font-display text-2xl font-semibold">Wayfarer</span>
+          </Link>
+          <LanguageSwitcher />
+        </div>
 
         <div className="rounded-3xl border border-primary/10 bg-card/90 p-8 shadow-lift backdrop-blur">
           <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")}>
             <TabsList className="mb-6 grid w-full grid-cols-2">
-              <TabsTrigger value="login">登录</TabsTrigger>
-              <TabsTrigger value="signup">注册</TabsTrigger>
+              <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
+              <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>
             </TabsList>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <TabsContent value="signup" className="m-0 space-y-4">
                 <div>
-                  <Label htmlFor="name">昵称 (可选)</Label>
+                  <Label htmlFor="name">{t("auth.displayName")}</Label>
                   <Input
                     id="name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="旅行者"
+                    placeholder={t("auth.travelerPlaceholder")}
                     autoComplete="name"
                   />
                 </div>
               </TabsContent>
 
               <div>
-                <Label htmlFor="email">邮箱</Label>
+                <Label htmlFor="email">{t("auth.email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -106,7 +113,7 @@ function LoginPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="password">密码</Label>
+                <Label htmlFor="password">{t("auth.password")}</Label>
                 <Input
                   id="password"
                   type="password"
@@ -114,22 +121,20 @@ function LoginPage() {
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="至少 6 位"
+                  placeholder={t("auth.minChars")}
                   autoComplete={mode === "login" ? "current-password" : "new-password"}
                 />
               </div>
 
               <Button type="submit" className="w-full shadow-lift" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {mode === "login" ? "登录" : "创建账号"}
+                {mode === "login" ? t("auth.login") : t("auth.createAccount")}
               </Button>
             </form>
           </Tabs>
         </div>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          注册即表示同意我们的服务条款与隐私政策
-        </p>
+        <p className="mt-6 text-center text-xs text-muted-foreground">{t("auth.terms")}</p>
       </div>
     </main>
   );
