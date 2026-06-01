@@ -207,7 +207,11 @@ function TripDetail() {
 
       <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
         <section className="lg:sticky lg:top-6 lg:self-start">
-          <MapPreview days={trip.days} />
+          <MapPreview
+            days={trip.days}
+            selectedDayId={selectedDayId}
+            onClearSelection={() => setSelectedDayId(null)}
+          />
         </section>
 
         <section className="rounded-3xl border border-primary/10 bg-card/80 p-4 shadow-soft backdrop-blur sm:p-5">
