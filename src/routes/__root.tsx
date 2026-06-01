@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
+import { bindQueryClient } from "@/lib/trips-store";
 
 
 
@@ -127,6 +128,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    bindQueryClient(queryClient);
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase.auth.onAuthStateChange(() => {
+        queryClient.invalidateQueries();
+        router.invalidate();
+      });
+    });
+  }, [queryClient, router]);
 
   return (
     <QueryClientProvider client={queryClient}>
