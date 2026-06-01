@@ -277,7 +277,7 @@ function TripDetail() {
                         </button>
                       )}
                     </div>
-                    {trip.days.length > 1 && editingDayId !== day.id && (
+                    {editingDayId !== day.id && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button size="icon" variant="ghost" className="h-7 w-7">
@@ -285,18 +285,26 @@ function TripDetail() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleOptimize(day)}>
+                            <Wand2 className="mr-2 h-3.5 w-3.5" />
+                            {t("trips.optimize")}
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => startEditDay(day, idx)}>
                             <Pencil className="mr-2 h-3.5 w-3.5" />
                             {t("trips.editTitle")}
                           </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() => tripsApi.removeDay(trip.id, day.id)}
-                          >
-                            <Trash2 className="mr-2 h-3.5 w-3.5" />
-                            {t("trips.deleteDay")}
-                          </DropdownMenuItem>
+                          {trip.days.length > 1 && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={() => tripsApi.removeDay(trip.id, day.id)}
+                              >
+                                <Trash2 className="mr-2 h-3.5 w-3.5" />
+                                {t("trips.deleteDay")}
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}
