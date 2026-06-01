@@ -1,10 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { Day } from "@/lib/trips-store";
-import { MapPin, Route as RouteIcon } from "lucide-react";
+import { MapPin, Route as RouteIcon, Loader2, Footprints, Car, Bike } from "lucide-react";
 
 interface Props {
   days: Day[];
+  selectedDayId?: string | null;
+  onClearSelection?: () => void;
 }
+
+type TransitMode = "foot" | "driving" | "cycling";
 
 const DAY_COLOR_VARS = [
   "--day-1",
@@ -33,20 +38,66 @@ function haversine(a: [number, number], b: [number, number]) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-export function MapPreview({ days }: Props) {
+interface OsrmRoute {
+  coords: [number, number][];
+  km: number;
+  minutes: number;
+}
+
+async function fetchOsrmRoute(
+  pts: [number, number][],
+  mode: TransitMode,
+  signal: AbortSignal,
+): Promise<OsrmRoute | null> {
+  if (pts.length < 2) return null;
+  const coordStr = pts.map(([lat, lng]) => `${lng},${lat}`).join(";");
+  const url = `https://router.project-osrm.org/route/v1/${mode}/${coordStr}?overview=full&geometries=geojson`;
+  const res = await fetch(url, { signal });
+  if (!res.ok) throw new Error(`OSRM ${res.status}`);
+  const data = await res.json();
+  const route = data?.routes?.[0];
+  if (!route) return null;
+  const coords: [number, number][] = route.geometry.coordinates.map(
+    ([lng, lat]: [number, number]) => [lat, lng],
+  );
+  return {
+    coords,
+    km: route.distance / 1000,
+    minutes: Math.round(route.duration / 60),
+  };
+}
+
+export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const layerRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
+  const [mode, setMode] = useState<TransitMode>("driving");
+  const [osrmRoute, setOsrmRoute] = useState<OsrmRoute | null>(null);
+  const [routeStatus, setRouteStatus] = useState<"idle" | "loading" | "error">("idle");
 
-  // initialize map (client-only)
+  const isFiltered = !!selectedDayId;
+  const visibleDays = useMemo(
+    () => (isFiltered ? days.filter((d) => d.id === selectedDayId) : days),
+    [days, selectedDayId, isFiltered],
+  );
+  const selectedDay = isFiltered ? visibleDays[0] : null;
+
+  const selectedPts = useMemo<[number, number][]>(() => {
+    if (!selectedDay) return [];
+    return selectedDay.attractions
+      .filter((a) => typeof a.lat === "number" && typeof a.lng === "number")
+      .map((a) => [a.lat!, a.lng!] as [number, number]);
+  }, [selectedDay]);
+
+  // init map
   useEffect(() => {
     if (typeof window === "undefined" || !containerRef.current) return;
     let cancelled = false;
     (async () => {
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current) return;
-
       if (!mapRef.current) {
         const map = L.map(containerRef.current, {
           center: [33.4, 126.55],
@@ -63,7 +114,6 @@ export function MapPreview({ days }: Props) {
         setReady(true);
       }
     })();
-
     return () => {
       cancelled = true;
       if (mapRef.current) {
@@ -74,7 +124,30 @@ export function MapPreview({ days }: Props) {
     };
   }, []);
 
-  // re-render markers
+  // fetch OSRM route when filtered
+  useEffect(() => {
+    if (!isFiltered || selectedPts.length < 2) {
+      setOsrmRoute(null);
+      setRouteStatus("idle");
+      return;
+    }
+    const ctrl = new AbortController();
+    setRouteStatus("loading");
+    fetchOsrmRoute(selectedPts, mode, ctrl.signal)
+      .then((r) => {
+        if (ctrl.signal.aborted) return;
+        setOsrmRoute(r);
+        setRouteStatus(r ? "idle" : "error");
+      })
+      .catch((err) => {
+        if (err?.name === "AbortError") return;
+        setOsrmRoute(null);
+        setRouteStatus("error");
+      });
+    return () => ctrl.abort();
+  }, [isFiltered, selectedPts, mode]);
+
+  // render markers + polylines
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     (async () => {
@@ -83,9 +156,17 @@ export function MapPreview({ days }: Props) {
       layer.clearLayers();
 
       const bounds: [number, number][] = [];
-      let globalIdx = 0;
 
-      days.forEach((day, di) => {
+      // Letter index continues across days when showing all; per-day when filtered.
+      let baseIdx = 0;
+      if (isFiltered && selectedDay) {
+        const before = days.findIndex((d) => d.id === selectedDay.id);
+        baseIdx = days.slice(0, before).reduce((s, d) => s + d.attractions.length, 0);
+      }
+
+      let globalIdx = baseIdx;
+      visibleDays.forEach((day) => {
+        const di = days.indexOf(day);
         const color = colorForDay(di);
         const pts: [number, number][] = [];
         day.attractions.forEach((a) => {
@@ -109,37 +190,108 @@ export function MapPreview({ days }: Props) {
           pts.push([a.lat, a.lng]);
           bounds.push([a.lat, a.lng]);
         });
+
         if (pts.length > 1) {
-          L.polyline(pts, {
-            color,
-            weight: 3,
-            opacity: 0.7,
-            dashArray: "6 6",
-          }).addTo(layer);
+          if (isFiltered && osrmRoute && osrmRoute.coords.length > 1) {
+            L.polyline(osrmRoute.coords, {
+              color,
+              weight: 5,
+              opacity: 0.85,
+            }).addTo(layer);
+          } else {
+            L.polyline(pts, {
+              color,
+              weight: 3,
+              opacity: 0.7,
+              dashArray: "6 6",
+            }).addTo(layer);
+          }
         }
       });
 
       if (bounds.length > 0) {
-        mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+        mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
       }
     })();
-  }, [ready, days]);
+  }, [ready, days, visibleDays, isFiltered, selectedDay, osrmRoute]);
 
-  const allPoints = days.flatMap((d) =>
+  // metrics for the badge
+  const allPoints = visibleDays.flatMap((d) =>
     d.attractions.filter((a) => typeof a.lat === "number" && typeof a.lng === "number"),
   );
+
   let distance = 0;
-  days.forEach((d) => {
-    const pts = d.attractions
-      .filter((a) => typeof a.lat === "number" && typeof a.lng === "number")
-      .map((a) => [a.lat!, a.lng!] as [number, number]);
-    for (let i = 1; i < pts.length; i++) distance += haversine(pts[i - 1], pts[i]);
-  });
-  const minutes = Math.round(distance * 2.5 + allPoints.length * 30);
+  let minutes = 0;
+  if (isFiltered && osrmRoute) {
+    distance = osrmRoute.km;
+    minutes = osrmRoute.minutes;
+  } else {
+    visibleDays.forEach((d) => {
+      const pts = d.attractions
+        .filter((a) => typeof a.lat === "number" && typeof a.lng === "number")
+        .map((a) => [a.lat!, a.lng!] as [number, number]);
+      for (let i = 1; i < pts.length; i++) distance += haversine(pts[i - 1], pts[i]);
+    });
+    minutes = Math.round(distance * 2.5 + allPoints.length * 30);
+  }
+
+  const dayIdx = selectedDay ? days.indexOf(selectedDay) : -1;
+  const dayLabel = selectedDay
+    ? selectedDay.title || t("trips.dayN", { n: dayIdx + 1 })
+    : "";
 
   return (
     <div className="relative h-full min-h-[460px] w-full overflow-hidden rounded-3xl border-2 border-primary/10 bg-gradient-sky shadow-lift">
       <div ref={containerRef} className="absolute inset-0 z-0" />
+
+      {/* Filter indicator + clear */}
+      {isFiltered && selectedDay && (
+        <div className="absolute left-3 top-3 z-10 flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 rounded-full bg-card/95 px-3 py-1.5 text-xs font-medium shadow-soft backdrop-blur"
+          >
+            <span
+              className="grid h-5 w-5 place-items-center rounded-full text-[10px] font-bold text-white"
+              style={{ background: `var(${DAY_COLOR_VARS[dayIdx % DAY_COLOR_VARS.length]})` }}
+            >
+              {dayIdx + 1}
+            </span>
+            <span className="text-foreground">{t("trips.viewingDay", { name: dayLabel })}</span>
+            {onClearSelection && (
+              <button
+                onClick={onClearSelection}
+                className="ml-1 rounded-full px-2 py-0.5 text-[11px] text-primary hover:bg-primary/10"
+              >
+                {t("trips.viewAllDays")}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Transit mode selector */}
+      {isFiltered && selectedPts.length > 1 && (
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-card/95 p-1 shadow-soft backdrop-blur">
+          {([
+            { id: "foot" as const, Icon: Footprints, label: t("trips.transitWalking") },
+            { id: "driving" as const, Icon: Car, label: t("trips.transitDriving") },
+            { id: "cycling" as const, Icon: Bike, label: t("trips.transitCycling") },
+          ]).map(({ id, Icon, label }) => (
+            <button
+              key={id}
+              onClick={() => setMode(id)}
+              title={label}
+              className={`grid h-7 w-7 place-items-center rounded-full transition-colors ${
+                mode === id
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+            </button>
+          ))}
+        </div>
+      )}
 
       {allPoints.length === 0 && (
         <div className="absolute inset-0 z-10 grid place-items-center bg-gradient-sky">
@@ -155,16 +307,29 @@ export function MapPreview({ days }: Props) {
       )}
 
       {allPoints.length > 1 && (
-        <div className="pointer-events-none absolute bottom-3 left-3 right-3 z-10 flex items-center gap-2 rounded-2xl bg-card/90 px-4 py-2.5 shadow-soft backdrop-blur">
+        <div className="pointer-events-none absolute bottom-3 left-3 right-3 z-10 flex items-center gap-2 rounded-2xl bg-card/95 px-4 py-2.5 shadow-soft backdrop-blur">
           <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-hero text-primary-foreground">
-            <RouteIcon className="h-4 w-4" />
+            {routeStatus === "loading" ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RouteIcon className="h-4 w-4" />
+            )}
           </div>
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-semibold text-foreground">
-              约 {distance.toFixed(1)} km · {Math.floor(minutes / 60)} 小时 {minutes % 60} 分
+              {routeStatus === "loading"
+                ? t("trips.routeLoading")
+                : t("trips.routeSummary", {
+                    km: distance.toFixed(1),
+                    min: minutes,
+                  })}
             </span>
             <span className="text-[10px] text-muted-foreground">
-              {allPoints.length} 个景点 · {days.filter((d) => d.attractions.length).length} 天行程
+              {isFiltered && osrmRoute
+                ? t("trips.recommendedRoute")
+                : routeStatus === "error"
+                  ? t("trips.routeFailed")
+                  : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
             </span>
           </div>
         </div>
