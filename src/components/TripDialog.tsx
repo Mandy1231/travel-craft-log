@@ -17,12 +17,19 @@ const EMOJIS = ["✈️", "🏝️", "🌸", "🗼", "🏔️", "🌋", "🏛️
 interface Props {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onSave: (data: { title: string; startDate?: string; endDate?: string; coverEmoji: string }) => void;
+  onSave: (data: {
+    title: string;
+    description?: string;
+    startDate?: string;
+    endDate?: string;
+    coverEmoji: string;
+  }) => void;
   initial?: Trip;
 }
 
 export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [emoji, setEmoji] = useState("✈️");
@@ -30,6 +37,7 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
   useEffect(() => {
     if (open) {
       setTitle(initial?.title ?? "");
+      setDescription(initial?.description ?? "");
       setStartDate(initial?.startDate ?? "");
       setEndDate(initial?.endDate ?? "");
       setEmoji(initial?.coverEmoji ?? "✈️");
@@ -40,6 +48,7 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
     if (!title.trim()) return;
     onSave({
       title: title.trim(),
+      description: description.trim() || undefined,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
       coverEmoji: emoji,
