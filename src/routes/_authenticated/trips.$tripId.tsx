@@ -14,6 +14,7 @@ import {
   Check,
   X,
   MapPin,
+  Wand2,
 } from "lucide-react";
 import {
   DndContext,
@@ -37,6 +38,7 @@ import { AddAttractionDialog } from "@/components/AddAttractionDialog";
 import { TripDialog } from "@/components/TripDialog";
 import { VisibilityBadge } from "@/components/VisibilityBadge";
 import { useTrip, tripsApi, type Attraction, type Day } from "@/lib/trips-store";
+import { optimizeDayOrder } from "@/lib/route-optimize";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -106,6 +108,26 @@ function TripDetail() {
       tripsApi.updateDay(trip.id, editingDayId, { title: editingDayTitle.trim() || undefined });
     }
     setEditingDayId(null);
+  };
+
+  const handleOptimize = (day: Day) => {
+    const result = optimizeDayOrder(day.attractions);
+    if (!result) {
+      toast.error(t("trips.optimizeNeedsPins"));
+      return;
+    }
+    const sameOrder = result.orderedIds.every((id, i) => id === day.attractions[i]?.id);
+    if (sameOrder || result.afterKm >= result.beforeKm - 0.01) {
+      toast(t("trips.optimizeNoGain"));
+      return;
+    }
+    tripsApi.reorderAttractions(trip.id, day.id, result.orderedIds);
+    toast.success(
+      t("trips.optimizeToast", {
+        before: result.beforeKm.toFixed(1),
+        after: result.afterKm.toFixed(1),
+      }),
+    );
   };
 
   return (
@@ -255,7 +277,7 @@ function TripDetail() {
                         </button>
                       )}
                     </div>
-                    {trip.days.length > 1 && editingDayId !== day.id && (
+                    {editingDayId !== day.id && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button size="icon" variant="ghost" className="h-7 w-7">
@@ -263,18 +285,26 @@ function TripDetail() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleOptimize(day)}>
+                            <Wand2 className="mr-2 h-3.5 w-3.5" />
+                            {t("trips.optimize")}
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => startEditDay(day, idx)}>
                             <Pencil className="mr-2 h-3.5 w-3.5" />
                             {t("trips.editTitle")}
                           </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() => tripsApi.removeDay(trip.id, day.id)}
-                          >
-                            <Trash2 className="mr-2 h-3.5 w-3.5" />
-                            {t("trips.deleteDay")}
-                          </DropdownMenuItem>
+                          {trip.days.length > 1 && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={() => tripsApi.removeDay(trip.id, day.id)}
+                              >
+                                <Trash2 className="mr-2 h-3.5 w-3.5" />
+                                {t("trips.deleteDay")}
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}

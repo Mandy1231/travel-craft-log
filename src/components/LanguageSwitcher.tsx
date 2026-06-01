@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { LANGS } from "@/i18n";
+import { LANGS, persistLanguage } from "@/i18n";
 import { Globe } from "lucide-react";
 
 export function LanguageSwitcher() {
@@ -12,7 +12,7 @@ export function LanguageSwitcher() {
       {LANGS.map((l) => (
         <button
           key={l.code}
-          onClick={() => i18n.changeLanguage(l.code)}
+          onClick={() => persistLanguage(l.code)}
           className={`rounded-full px-2 py-0.5 transition-all ${
             current === l.code
               ? "bg-gradient-hero text-white shadow-soft"
