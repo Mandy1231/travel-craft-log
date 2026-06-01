@@ -259,9 +259,9 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
 
   let distance = 0;
   let minutes = 0;
-  if (isFiltered && osrmRoute) {
-    distance = osrmRoute.km;
-    minutes = osrmRoute.minutes;
+  if (isFiltered) {
+    distance = routeKm;
+    minutes = minutesForMode(routeKm, mode, osrmRoute?.drivingMinutes);
   } else {
     visibleDays.forEach((d) => {
       const pts = d.attractions
