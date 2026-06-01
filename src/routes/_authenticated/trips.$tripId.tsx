@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   Calendar,
@@ -46,12 +47,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
-  head: () => ({
-    meta: [
-      { title: "行程详情 · Wayfarer" },
-      { name: "description", content: "查看行程的每一天和每一个景点。" },
-    ],
-  }),
   component: TripDetail,
 });
 
