@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus,
   Calendar,
@@ -31,12 +32,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/_authenticated/")({
-  head: () => ({
-    meta: [
-      { title: "我的旅行计划 · Wayfarer" },
-      { name: "description", content: "管理你的所有旅行计划,从灵感到行程。" },
-    ],
-  }),
   component: Index,
 });
 
@@ -56,14 +51,14 @@ function dayCount(t: Trip) {
   return t.days.length;
 }
 
-const FILTERS: { value: Visibility | "all"; label: string }[] = [
-  { value: "all", label: "全部" },
-  { value: "private", label: "私人" },
-  { value: "public", label: "公开" },
-  { value: "draft", label: "草稿" },
-];
-
 function Index() {
+  const { t } = useTranslation();
+  const FILTERS: { value: Visibility | "all"; label: string }[] = [
+    { value: "all", label: t("trips.filterAll") },
+    { value: "private", label: t("trips.filterPrivate") },
+    { value: "public", label: t("trips.filterPublic") },
+    { value: "draft", label: t("trips.filterDraft") },
+  ];
   const trips = useTrips();
   const [createOpen, setCreateOpen] = useState(false);
   const [editTrip, setEditTrip] = useState<Trip | null>(null);
