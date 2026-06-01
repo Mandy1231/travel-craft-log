@@ -64,6 +64,7 @@ function TripDetail() {
   const [addCtx, setAddCtx] = useState<{ dayId: string; attraction?: Attraction } | null>(null);
   const [editingDayId, setEditingDayId] = useState<string | null>(null);
   const [editingDayTitle, setEditingDayTitle] = useState("");
+  const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
 
   const totalSpots = useMemo(
     () => trip?.days.reduce((s, d) => s + d.attractions.length, 0) ?? 0,
