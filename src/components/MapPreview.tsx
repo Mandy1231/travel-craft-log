@@ -41,17 +41,18 @@ function haversine(a: [number, number], b: [number, number]) {
 interface OsrmRoute {
   coords: [number, number][];
   km: number;
-  minutes: number;
+  drivingMinutes: number;
 }
 
+// Public OSRM demo only reliably serves the "driving" profile.
+// We fetch the geometry once and derive per-mode times from the distance.
 async function fetchOsrmRoute(
   pts: [number, number][],
-  mode: TransitMode,
   signal: AbortSignal,
 ): Promise<OsrmRoute | null> {
   if (pts.length < 2) return null;
   const coordStr = pts.map(([lat, lng]) => `${lng},${lat}`).join(";");
-  const url = `https://router.project-osrm.org/route/v1/${mode}/${coordStr}?overview=full&geometries=geojson`;
+  const url = `https://router.project-osrm.org/route/v1/driving/${coordStr}?overview=full&geometries=geojson`;
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`OSRM ${res.status}`);
   const data = await res.json();
@@ -63,8 +64,26 @@ async function fetchOsrmRoute(
   return {
     coords,
     km: route.distance / 1000,
-    minutes: Math.round(route.duration / 60),
+    drivingMinutes: Math.round(route.duration / 60),
   };
+}
+
+// Average speeds (km/h) for non-driving modes.
+const SPEED_KMH: Record<TransitMode, number> = {
+  foot: 5,
+  cycling: 15,
+  driving: 40, // fallback if OSRM duration missing
+};
+
+function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
+  if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
+  return Math.max(1, Math.round((km / SPEED_KMH[mode]) * 60));
+}
+
+function recommendModeForDistance(km: number): TransitMode {
+  if (km <= 2) return "foot";
+  if (km <= 8) return "cycling";
+  return "driving";
 }
 
 export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
