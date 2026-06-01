@@ -313,20 +313,30 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
             { id: "foot" as const, Icon: Footprints, label: t("trips.transitWalking") },
             { id: "driving" as const, Icon: Car, label: t("trips.transitDriving") },
             { id: "cycling" as const, Icon: Bike, label: t("trips.transitCycling") },
-          ]).map(({ id, Icon, label }) => (
-            <button
-              key={id}
-              onClick={() => setMode(id)}
-              title={label}
-              className={`grid h-7 w-7 place-items-center rounded-full transition-colors ${
-                mode === id
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <Icon className="h-3.5 w-3.5" />
-            </button>
-          ))}
+          ]).map(({ id, Icon, label }) => {
+            const isRecommended = id === recommendedMode;
+            const isActive = mode === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setMode(id)}
+                title={isRecommended ? `${label} · ${t("trips.recommendedBadge")}` : label}
+                className={`relative grid h-7 w-7 place-items-center rounded-full transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {isRecommended && (
+                  <span
+                    aria-hidden
+                    className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-accent ring-2 ring-card"
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
 
