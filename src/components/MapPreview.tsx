@@ -45,7 +45,6 @@ export function MapPreview({ days }: Props) {
     let cancelled = false;
     (async () => {
       const L = (await import("leaflet")).default;
-      await import("leaflet/dist/leaflet.css");
       if (cancelled || !containerRef.current) return;
 
       if (!mapRef.current) {
