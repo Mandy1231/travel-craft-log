@@ -142,10 +142,10 @@
 }
 
 @layer utilities {
-  .bg-gradient-hero { background: var(--gradient-hero); }
-  .bg-gradient-sky { background: var(--gradient-sky); }
-  .bg-gradient-sunset { background: var(--gradient-sunset); }
-  .bg-gradient-ocean { background: var(--gradient-ocean); }
+  .bg-gradient-hero { background-image: var(--gradient-hero); }
+  .bg-gradient-sky { background-image: var(--gradient-sky); }
+  .bg-gradient-sunset { background-image: var(--gradient-sunset); }
+  .bg-gradient-ocean { background-image: var(--gradient-ocean); }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-lift { box-shadow: var(--shadow-lift); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
