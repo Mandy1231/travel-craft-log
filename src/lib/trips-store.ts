@@ -103,13 +103,13 @@ export function useTrips() {
   return data ?? [];
 }
 
-export function useTrip(id: string | undefined) {
-  const q = useQuery({
+export function useTrip(id: string | undefined): Trip | undefined {
+  const { data } = useQuery({
     queryKey: ["trips", id],
     queryFn: () => (id ? fetchTrip(id) : Promise.resolve(null)),
     enabled: !!id,
   });
-  return { trip: q.data ?? undefined, isLoading: q.isLoading };
+  return data ?? undefined;
 }
 
 function deriveVisibility(startDate?: string, current?: Visibility): Visibility {
