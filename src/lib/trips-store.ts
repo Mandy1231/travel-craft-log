@@ -163,7 +163,7 @@ export const tripsApi = {
     if ("endDate" in patch) body.end_date = patch.endDate || null;
     if ("coverEmoji" in patch) body.cover_emoji = patch.coverEmoji;
     if (nextVisibility) body.visibility = nextVisibility;
-    const { error } = await supabase.from("trips").update(body).eq("id", id);
+    const { error } = await supabase.from("trips").update(body as never).eq("id", id);
     if (error) throw error;
     invalidateAll();
   },
@@ -232,7 +232,7 @@ export const tripsApi = {
   async updateDay(_tripId: string, dayId: string, patch: Partial<Day>) {
     const body: Record<string, unknown> = {};
     if ("title" in patch) body.title = patch.title || null;
-    await supabase.from("days").update(body).eq("id", dayId);
+    await supabase.from("days").update(body as never).eq("id", dayId);
     invalidateAll();
   },
 
@@ -283,7 +283,7 @@ export const tripsApi = {
     if ("openingHours" in patch) body.opening_hours = patch.openingHours ?? null;
     if ("lat" in patch) body.lat = patch.lat ?? null;
     if ("lng" in patch) body.lng = patch.lng ?? null;
-    await supabase.from("attractions").update(body).eq("id", id);
+    await supabase.from("attractions").update(body as never).eq("id", id);
     invalidateAll();
   },
 
