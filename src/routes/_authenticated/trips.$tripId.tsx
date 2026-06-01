@@ -14,6 +14,7 @@ import {
   Check,
   X,
   MapPin,
+  Wand2,
 } from "lucide-react";
 import {
   DndContext,
@@ -37,6 +38,7 @@ import { AddAttractionDialog } from "@/components/AddAttractionDialog";
 import { TripDialog } from "@/components/TripDialog";
 import { VisibilityBadge } from "@/components/VisibilityBadge";
 import { useTrip, tripsApi, type Attraction, type Day } from "@/lib/trips-store";
+import { optimizeDayOrder } from "@/lib/route-optimize";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -106,6 +108,26 @@ function TripDetail() {
       tripsApi.updateDay(trip.id, editingDayId, { title: editingDayTitle.trim() || undefined });
     }
     setEditingDayId(null);
+  };
+
+  const handleOptimize = (day: Day) => {
+    const result = optimizeDayOrder(day.attractions);
+    if (!result) {
+      toast.error(t("trips.optimizeNeedsPins"));
+      return;
+    }
+    const sameOrder = result.orderedIds.every((id, i) => id === day.attractions[i]?.id);
+    if (sameOrder || result.afterKm >= result.beforeKm - 0.01) {
+      toast(t("trips.optimizeNoGain"));
+      return;
+    }
+    tripsApi.reorderAttractions(trip.id, day.id, result.orderedIds);
+    toast.success(
+      t("trips.optimizeToast", {
+        before: result.beforeKm.toFixed(1),
+        after: result.afterKm.toFixed(1),
+      }),
+    );
   };
 
   return (
