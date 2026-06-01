@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useQuery, type QueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Attraction {
   id: string;
@@ -19,139 +20,96 @@ export type Visibility = "private" | "public" | "draft";
 
 export interface Trip {
   id: string;
+  userId?: string;
   title: string;
   description?: string;
   startDate?: string;
   endDate?: string;
   visibility: Visibility;
-  isDraft?: boolean; // legacy
-  isPublic?: boolean; // legacy
   coverEmoji?: string;
   days: Day[];
   createdAt: number;
 }
 
-const KEY = "lovable.trips.v2";
-
-function uid() {
-  return Math.random().toString(36).slice(2, 10);
+let _qc: QueryClient | null = null;
+export function bindQueryClient(qc: QueryClient) {
+  _qc = qc;
+}
+function invalidateAll() {
+  _qc?.invalidateQueries({ queryKey: ["trips"] });
 }
 
-function migrate(t: any): Trip {
-  let visibility: Visibility = t.visibility;
-  if (!visibility) {
-    if (t.isDraft) visibility = "draft";
-    else if (t.isPublic) visibility = "public";
-    else visibility = "private";
-  }
+function mapAttraction(row: any): Attraction {
   return {
-    ...t,
-    visibility,
-    days: (t.days ?? []).map((d: any) => ({
-      id: d.id ?? uid(),
-      title: d.title,
-      attractions: d.attractions ?? [],
-    })),
+    id: row.id,
+    name: row.name,
+    description: row.description ?? undefined,
+    openingHours: row.opening_hours ?? undefined,
+    lat: row.lat ?? undefined,
+    lng: row.lng ?? undefined,
   };
 }
 
-function read(): Trip[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) {
-      // try migrating from v1
-      const old = localStorage.getItem("lovable.trips.v1");
-      if (old) {
-        const migrated = (JSON.parse(old) as any[]).map(migrate);
-        localStorage.setItem(KEY, JSON.stringify(migrated));
-        return migrated;
-      }
-      return seed();
-    }
-    return (JSON.parse(raw) as any[]).map(migrate);
-  } catch {
-    return [];
-  }
+function mapDay(row: any): Day {
+  return {
+    id: row.id,
+    title: row.title ?? undefined,
+    attractions: ((row.attractions ?? []) as any[])
+      .slice()
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+      .map(mapAttraction),
+  };
 }
 
-function write(trips: Trip[]) {
-  localStorage.setItem(KEY, JSON.stringify(trips));
-  window.dispatchEvent(new CustomEvent("trips:changed"));
+function mapTrip(row: any): Trip {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    title: row.title,
+    description: row.description ?? undefined,
+    startDate: row.start_date ?? undefined,
+    endDate: row.end_date ?? undefined,
+    visibility: row.visibility,
+    coverEmoji: row.cover_emoji ?? "✈️",
+    days: ((row.days ?? []) as any[])
+      .slice()
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+      .map(mapDay),
+    createdAt: row.created_at ? new Date(row.created_at).getTime() : 0,
+  };
 }
 
-function seed(): Trip[] {
-  const initial: Trip[] = [
-    {
-      id: uid(),
-      title: "济州岛五天游",
-      startDate: "2024-01-15",
-      endDate: "2024-01-19",
-      visibility: "private",
-      coverEmoji: "🏝️",
-      createdAt: Date.now() - 3,
-      days: [
-        {
-          id: uid(),
-          title: "汉拿山日出",
-          attractions: [
-            { id: uid(), name: "汉拿山", openingHours: "9:00 开放", description: "济州岛地标火山", lat: 33.3617, lng: 126.5337 },
-            { id: uid(), name: "正房瀑布", openingHours: "全天开放", description: "直入大海的瀑布", lat: 33.2447, lng: 126.5719 },
-          ],
-        },
-        {
-          id: uid(),
-          title: "海岸线漫步",
-          attractions: [
-            { id: uid(), name: "城山日出峰", openingHours: "日出前开放", description: "日出绝佳观赏点", lat: 33.4581, lng: 126.9425 },
-          ],
-        },
-        { id: uid(), title: "自由日", attractions: [] },
-      ],
-    },
-    {
-      id: uid(),
-      title: "东京樱花之旅",
-      startDate: "2024-03-20",
-      endDate: "2024-03-25",
-      visibility: "public",
-      coverEmoji: "🌸",
-      createdAt: Date.now() - 2,
-      days: [{ id: uid(), attractions: [
-        { id: uid(), name: "上野公园", openingHours: "全天开放", description: "赏樱圣地", lat: 35.7156, lng: 139.7745 },
-      ] }],
-    },
-    {
-      id: uid(),
-      title: "巴黎浪漫行",
-      visibility: "draft",
-      coverEmoji: "🗼",
-      createdAt: Date.now() - 1,
-      days: [{ id: uid(), attractions: [] }],
-    },
-  ];
-  localStorage.setItem(KEY, JSON.stringify(initial));
-  return initial;
+async function fetchTrips(): Promise<Trip[]> {
+  const { data, error } = await supabase
+    .from("trips")
+    .select("*, days(*, attractions(*))")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(mapTrip);
+}
+
+async function fetchTrip(id: string): Promise<Trip | null> {
+  const { data, error } = await supabase
+    .from("trips")
+    .select("*, days(*, attractions(*))")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? mapTrip(data) : null;
 }
 
 export function useTrips() {
-  const [trips, setTrips] = useState<Trip[]>([]);
-  useEffect(() => {
-    setTrips(read());
-    const handler = () => setTrips(read());
-    window.addEventListener("trips:changed", handler);
-    window.addEventListener("storage", handler);
-    return () => {
-      window.removeEventListener("trips:changed", handler);
-      window.removeEventListener("storage", handler);
-    };
-  }, []);
-  return trips;
+  const { data } = useQuery({ queryKey: ["trips"], queryFn: fetchTrips });
+  return data ?? [];
 }
 
-export function useTrip(id: string | undefined) {
-  const trips = useTrips();
-  return trips.find((t) => t.id === id);
+export function useTrip(id: string | undefined): Trip | undefined {
+  const { data } = useQuery({
+    queryKey: ["trips", id],
+    queryFn: () => (id ? fetchTrip(id) : Promise.resolve(null)),
+    enabled: !!id,
+  });
+  return data ?? undefined;
 }
 
 function deriveVisibility(startDate?: string, current?: Visibility): Visibility {
@@ -160,152 +118,177 @@ function deriveVisibility(startDate?: string, current?: Visibility): Visibility 
   return current ?? "private";
 }
 
+async function getUserId() {
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) throw new Error("未登录");
+  return data.user.id;
+}
+
 export const tripsApi = {
-  create(partial: Partial<Trip>): Trip {
-    const trips = read();
-    const trip: Trip = {
-      id: uid(),
-      title: partial.title || "未命名行程",
-      description: partial.description,
-      startDate: partial.startDate,
-      endDate: partial.endDate,
-      visibility: deriveVisibility(partial.startDate, partial.visibility),
-      coverEmoji: partial.coverEmoji || "✈️",
-      days: [{ id: uid(), attractions: [] }],
-      createdAt: Date.now(),
-    };
-    write([trip, ...trips]);
-    return trip;
+  async create(partial: Partial<Trip>) {
+    const userId = await getUserId();
+    const visibility = deriveVisibility(partial.startDate, partial.visibility);
+    const { data: trip, error } = await supabase
+      .from("trips")
+      .insert({
+        user_id: userId,
+        title: partial.title || "未命名行程",
+        description: partial.description ?? null,
+        start_date: partial.startDate || null,
+        end_date: partial.endDate || null,
+        visibility,
+        cover_emoji: partial.coverEmoji || "✈️",
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    await supabase.from("days").insert({ trip_id: trip.id, position: 0 });
+    invalidateAll();
   },
-  update(id: string, patch: Partial<Trip>) {
-    write(read().map((t) => {
-      if (t.id !== id) return t;
-      const merged = { ...t, ...patch };
-      // re-derive visibility when date changes
-      if ("startDate" in patch && !("visibility" in patch)) {
-        merged.visibility = deriveVisibility(merged.startDate, t.visibility);
-      }
-      return merged;
-    }));
+
+  async update(id: string, patch: Partial<Trip>) {
+    let nextVisibility = patch.visibility;
+    if ("startDate" in patch && !("visibility" in patch)) {
+      const { data } = await supabase
+        .from("trips")
+        .select("visibility")
+        .eq("id", id)
+        .single();
+      nextVisibility = deriveVisibility(patch.startDate, data?.visibility as Visibility);
+    }
+    const body: Record<string, unknown> = {};
+    if ("title" in patch) body.title = patch.title;
+    if ("description" in patch) body.description = patch.description ?? null;
+    if ("startDate" in patch) body.start_date = patch.startDate || null;
+    if ("endDate" in patch) body.end_date = patch.endDate || null;
+    if ("coverEmoji" in patch) body.cover_emoji = patch.coverEmoji;
+    if (nextVisibility) body.visibility = nextVisibility;
+    const { error } = await supabase.from("trips").update(body).eq("id", id);
+    if (error) throw error;
+    invalidateAll();
   },
-  remove(id: string) {
-    write(read().filter((t) => t.id !== id));
+
+  async remove(id: string) {
+    await supabase.from("trips").delete().eq("id", id);
+    invalidateAll();
   },
-  duplicate(id: string) {
-    const trips = read();
-    const src = trips.find((t) => t.id === id);
+
+  async duplicate(id: string) {
+    const src = await fetchTrip(id);
     if (!src) return;
-    const copy: Trip = {
-      ...src,
-      id: uid(),
-      title: src.title + " (副本)",
-      visibility: "private",
-      createdAt: Date.now(),
-      days: src.days.map((d) => ({
-        ...d,
-        id: uid(),
-        attractions: d.attractions.map((a) => ({ ...a, id: uid() })),
-      })),
-    };
-    write([copy, ...trips]);
+    const userId = await getUserId();
+    const { data: trip, error } = await supabase
+      .from("trips")
+      .insert({
+        user_id: userId,
+        title: src.title + " (副本)",
+        description: src.description ?? null,
+        start_date: src.startDate || null,
+        end_date: src.endDate || null,
+        visibility: "private",
+        cover_emoji: src.coverEmoji,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    for (let i = 0; i < src.days.length; i++) {
+      const d = src.days[i];
+      const { data: newDay, error: dErr } = await supabase
+        .from("days")
+        .insert({ trip_id: trip.id, title: d.title ?? null, position: i })
+        .select()
+        .single();
+      if (dErr || !newDay) continue;
+      if (d.attractions.length) {
+        await supabase.from("attractions").insert(
+          d.attractions.map((a, idx) => ({
+            day_id: newDay.id,
+            name: a.name,
+            description: a.description ?? null,
+            opening_hours: a.openingHours ?? null,
+            lat: a.lat ?? null,
+            lng: a.lng ?? null,
+            position: idx,
+          })),
+        );
+      }
+    }
+    invalidateAll();
   },
-  addDay(tripId: string) {
-    write(
-      read().map((t) =>
-        t.id === tripId ? { ...t, days: [...t.days, { id: uid(), attractions: [] }] } : t,
+
+  async addDay(tripId: string) {
+    const { data: existing } = await supabase
+      .from("days")
+      .select("position")
+      .eq("trip_id", tripId)
+      .order("position", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const pos = (existing?.position ?? -1) + 1;
+    await supabase.from("days").insert({ trip_id: tripId, position: pos });
+    invalidateAll();
+  },
+
+  async updateDay(_tripId: string, dayId: string, patch: Partial<Day>) {
+    const body: Record<string, unknown> = {};
+    if ("title" in patch) body.title = patch.title || null;
+    await supabase.from("days").update(body).eq("id", dayId);
+    invalidateAll();
+  },
+
+  async removeDay(_tripId: string, dayId: string) {
+    await supabase.from("days").delete().eq("id", dayId);
+    invalidateAll();
+  },
+
+  async reorderAttractions(_tripId: string, _dayId: string, orderedIds: string[]) {
+    await Promise.all(
+      orderedIds.map((id, idx) =>
+        supabase.from("attractions").update({ position: idx }).eq("id", id),
       ),
     );
+    invalidateAll();
   },
-  updateDay(tripId: string, dayId: string, patch: Partial<Day>) {
-    write(
-      read().map((t) =>
-        t.id === tripId
-          ? { ...t, days: t.days.map((d) => (d.id === dayId ? { ...d, ...patch } : d)) }
-          : t,
-      ),
-    );
+
+  async addAttraction(_tripId: string, dayId: string, a: Omit<Attraction, "id">) {
+    const { data: existing } = await supabase
+      .from("attractions")
+      .select("position")
+      .eq("day_id", dayId)
+      .order("position", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const pos = (existing?.position ?? -1) + 1;
+    await supabase.from("attractions").insert({
+      day_id: dayId,
+      name: a.name,
+      description: a.description ?? null,
+      opening_hours: a.openingHours ?? null,
+      lat: a.lat ?? null,
+      lng: a.lng ?? null,
+      position: pos,
+    });
+    invalidateAll();
   },
-  removeDay(tripId: string, dayId: string) {
-    write(
-      read().map((t) =>
-        t.id === tripId ? { ...t, days: t.days.filter((d) => d.id !== dayId) } : t,
-      ),
-    );
+
+  async updateAttraction(
+    _tripId: string,
+    _dayId: string,
+    id: string,
+    patch: Partial<Attraction>,
+  ) {
+    const body: Record<string, unknown> = {};
+    if ("name" in patch) body.name = patch.name;
+    if ("description" in patch) body.description = patch.description ?? null;
+    if ("openingHours" in patch) body.opening_hours = patch.openingHours ?? null;
+    if ("lat" in patch) body.lat = patch.lat ?? null;
+    if ("lng" in patch) body.lng = patch.lng ?? null;
+    await supabase.from("attractions").update(body).eq("id", id);
+    invalidateAll();
   },
-  reorderAttractions(tripId: string, dayId: string, orderedIds: string[]) {
-    write(
-      read().map((t) =>
-        t.id === tripId
-          ? {
-              ...t,
-              days: t.days.map((d) =>
-                d.id === dayId
-                  ? {
-                      ...d,
-                      attractions: orderedIds
-                        .map((oid) => d.attractions.find((a) => a.id === oid))
-                        .filter(Boolean) as Attraction[],
-                    }
-                  : d,
-              ),
-            }
-          : t,
-      ),
-    );
-  },
-  addAttraction(tripId: string, dayId: string, a: Omit<Attraction, "id">) {
-    write(
-      read().map((t) =>
-        t.id === tripId
-          ? {
-              ...t,
-              days: t.days.map((d) =>
-                d.id === dayId ? { ...d, attractions: [...d.attractions, { ...a, id: uid() }] } : d,
-              ),
-            }
-          : t,
-      ),
-    );
-  },
-  updateAttraction(tripId: string, dayId: string, attractionId: string, patch: Partial<Attraction>) {
-    write(
-      read().map((t) =>
-        t.id === tripId
-          ? {
-              ...t,
-              days: t.days.map((d) =>
-                d.id === dayId
-                  ? {
-                      ...d,
-                      attractions: d.attractions.map((a) =>
-                        a.id === attractionId ? { ...a, ...patch } : a,
-                      ),
-                    }
-                  : d,
-              ),
-            }
-          : t,
-      ),
-    );
-  },
-  removeAttraction(tripId: string, dayId: string, attractionId: string) {
-    write(
-      read().map((t) =>
-        t.id === tripId
-          ? {
-              ...t,
-              days: t.days.map((d) =>
-                d.id === dayId
-                  ? { ...d, attractions: d.attractions.filter((a) => a.id !== attractionId) }
-                  : d,
-              ),
-            }
-          : t,
-      ),
-    );
+
+  async removeAttraction(_tripId: string, _dayId: string, id: string) {
+    await supabase.from("attractions").delete().eq("id", id);
+    invalidateAll();
   },
 };
-
-export function useTripsApi() {
-  return useCallback(() => tripsApi, [])();
-}
