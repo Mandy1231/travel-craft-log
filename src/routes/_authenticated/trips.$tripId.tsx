@@ -230,17 +230,40 @@ function TripDetail() {
               return (
                 <li
                   key={day.id}
-                  className="overflow-hidden rounded-2xl border bg-background/70"
-                  style={{ borderLeft: `4px solid var(${colorVar})` }}
+                  className={`overflow-hidden rounded-2xl border bg-background/70 transition-shadow ${
+                    selectedDayId === day.id ? "ring-2 ring-offset-2 ring-offset-background shadow-lift" : ""
+                  }`}
+                  style={{
+                    borderLeft: `4px solid var(${colorVar})`,
+                    ...(selectedDayId === day.id
+                      ? ({ "--tw-ring-color": `var(${colorVar})` } as React.CSSProperties)
+                      : {}),
+                  }}
                 >
                   <div className="flex items-center justify-between gap-2 bg-gradient-sky/50 px-4 py-2.5">
                     <div className="flex min-w-0 flex-1 items-center gap-2">
-                      <span
-                        className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold text-white"
-                        style={{ background: `var(${colorVar})` }}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSelectedDayId((cur) => (cur === day.id ? null : day.id))
+                        }
+                        title={
+                          selectedDayId === day.id
+                            ? t("trips.showingOnMap")
+                            : t("trips.showOnMap")
+                        }
+                        className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold text-white transition-transform hover:scale-110 ${
+                          selectedDayId === day.id ? "ring-2 ring-offset-1 ring-offset-background" : ""
+                        }`}
+                        style={{
+                          background: `var(${colorVar})`,
+                          ...(selectedDayId === day.id
+                            ? ({ "--tw-ring-color": `var(${colorVar})` } as React.CSSProperties)
+                            : {}),
+                        }}
                       >
                         {idx + 1}
-                      </span>
+                      </button>
                       {editingDayId === day.id ? (
                         <div className="flex flex-1 items-center gap-1">
                           <Input
