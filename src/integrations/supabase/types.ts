@@ -14,7 +14,148 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attractions: {
+        Row: {
+          created_at: string
+          day_id: string
+          description: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          name: string
+          opening_hours: string | null
+          position: number
+        }
+        Insert: {
+          created_at?: string
+          day_id: string
+          description?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          opening_hours?: string | null
+          position?: number
+        }
+        Update: {
+          created_at?: string
+          day_id?: string
+          description?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          opening_hours?: string | null
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attractions_day_id_fkey"
+            columns: ["day_id"]
+            isOneToOne: false
+            referencedRelation: "days"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      days: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          title: string | null
+          trip_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          title?: string | null
+          trip_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          title?: string | null
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "days_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      trips: {
+        Row: {
+          cover_emoji: string | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          id: string
+          start_date: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          visibility: Database["public"]["Enums"]["trip_visibility"]
+        }
+        Insert: {
+          cover_emoji?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+          visibility?: Database["public"]["Enums"]["trip_visibility"]
+        }
+        Update: {
+          cover_emoji?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          visibility?: Database["public"]["Enums"]["trip_visibility"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +164,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      trip_visibility: "private" | "public" | "draft"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +291,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      trip_visibility: ["private", "public", "draft"],
+    },
   },
 } as const
