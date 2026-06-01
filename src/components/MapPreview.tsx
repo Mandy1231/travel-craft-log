@@ -41,17 +41,18 @@ function haversine(a: [number, number], b: [number, number]) {
 interface OsrmRoute {
   coords: [number, number][];
   km: number;
-  minutes: number;
+  drivingMinutes: number;
 }
 
+// Public OSRM demo only reliably serves the "driving" profile.
+// We fetch the geometry once and derive per-mode times from the distance.
 async function fetchOsrmRoute(
   pts: [number, number][],
-  mode: TransitMode,
   signal: AbortSignal,
 ): Promise<OsrmRoute | null> {
   if (pts.length < 2) return null;
   const coordStr = pts.map(([lat, lng]) => `${lng},${lat}`).join(";");
-  const url = `https://router.project-osrm.org/route/v1/${mode}/${coordStr}?overview=full&geometries=geojson`;
+  const url = `https://router.project-osrm.org/route/v1/driving/${coordStr}?overview=full&geometries=geojson`;
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`OSRM ${res.status}`);
   const data = await res.json();
@@ -63,8 +64,26 @@ async function fetchOsrmRoute(
   return {
     coords,
     km: route.distance / 1000,
-    minutes: Math.round(route.duration / 60),
+    drivingMinutes: Math.round(route.duration / 60),
   };
+}
+
+// Average speeds (km/h) for non-driving modes.
+const SPEED_KMH: Record<TransitMode, number> = {
+  foot: 5,
+  cycling: 15,
+  driving: 40, // fallback if OSRM duration missing
+};
+
+function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
+  if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
+  return Math.max(1, Math.round((km / SPEED_KMH[mode]) * 60));
+}
+
+function recommendModeForDistance(km: number): TransitMode {
+  if (km <= 2) return "foot";
+  if (km <= 8) return "cycling";
+  return "driving";
 }
 
 export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
@@ -124,7 +143,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
     };
   }, []);
 
-  // fetch OSRM route when filtered
+  // Fetch the geometry once per day selection (driving profile only).
   useEffect(() => {
     if (!isFiltered || selectedPts.length < 2) {
       setOsrmRoute(null);
@@ -133,7 +152,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
     }
     const ctrl = new AbortController();
     setRouteStatus("loading");
-    fetchOsrmRoute(selectedPts, mode, ctrl.signal)
+    fetchOsrmRoute(selectedPts, ctrl.signal)
       .then((r) => {
         if (ctrl.signal.aborted) return;
         setOsrmRoute(r);
@@ -145,7 +164,25 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
         setRouteStatus("error");
       });
     return () => ctrl.abort();
-  }, [isFiltered, selectedPts, mode]);
+  }, [isFiltered, selectedPts]);
+
+  // Straight-line distance fallback (used when OSRM hasn't returned yet or failed).
+  const straightKm = useMemo(() => {
+    let d = 0;
+    for (let i = 1; i < selectedPts.length; i++) d += haversine(selectedPts[i - 1], selectedPts[i]);
+    return d;
+  }, [selectedPts]);
+
+  const routeKm = osrmRoute?.km ?? straightKm;
+  const recommendedMode = useMemo<TransitMode>(
+    () => recommendModeForDistance(routeKm),
+    [routeKm],
+  );
+
+  // Reset selection to the recommended mode whenever the day or distance changes.
+  useEffect(() => {
+    if (isFiltered) setMode(recommendedMode);
+  }, [isFiltered, selectedDayId, recommendedMode]);
 
   // render markers + polylines
   useEffect(() => {
@@ -222,9 +259,9 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
 
   let distance = 0;
   let minutes = 0;
-  if (isFiltered && osrmRoute) {
-    distance = osrmRoute.km;
-    minutes = osrmRoute.minutes;
+  if (isFiltered) {
+    distance = routeKm;
+    minutes = minutesForMode(routeKm, mode, osrmRoute?.drivingMinutes);
   } else {
     visibleDays.forEach((d) => {
       const pts = d.attractions
@@ -276,20 +313,30 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
             { id: "foot" as const, Icon: Footprints, label: t("trips.transitWalking") },
             { id: "driving" as const, Icon: Car, label: t("trips.transitDriving") },
             { id: "cycling" as const, Icon: Bike, label: t("trips.transitCycling") },
-          ]).map(({ id, Icon, label }) => (
-            <button
-              key={id}
-              onClick={() => setMode(id)}
-              title={label}
-              className={`grid h-7 w-7 place-items-center rounded-full transition-colors ${
-                mode === id
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <Icon className="h-3.5 w-3.5" />
-            </button>
-          ))}
+          ]).map(({ id, Icon, label }) => {
+            const isRecommended = id === recommendedMode;
+            const isActive = mode === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setMode(id)}
+                title={isRecommended ? `${label} · ${t("trips.recommendedBadge")}` : label}
+                className={`relative grid h-7 w-7 place-items-center rounded-full transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {isRecommended && (
+                  <span
+                    aria-hidden
+                    className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-accent ring-2 ring-card"
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -325,8 +372,10 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
                   })}
             </span>
             <span className="text-[10px] text-muted-foreground">
-              {isFiltered && osrmRoute
-                ? t("trips.recommendedRoute")
+              {isFiltered
+                ? mode === recommendedMode
+                  ? t(`trips.recommendedMode_${recommendedMode}` as const)
+                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : "Cycling"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
                 : routeStatus === "error"
                   ? t("trips.routeFailed")
                   : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
