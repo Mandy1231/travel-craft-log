@@ -372,8 +372,10 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
                   })}
             </span>
             <span className="text-[10px] text-muted-foreground">
-              {isFiltered && osrmRoute
-                ? t("trips.recommendedRoute")
+              {isFiltered
+                ? mode === recommendedMode
+                  ? t(`trips.recommendedMode_${recommendedMode}` as const)
+                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : "Cycling"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
                 : routeStatus === "error"
                   ? t("trips.routeFailed")
                   : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
