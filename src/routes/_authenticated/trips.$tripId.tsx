@@ -45,7 +45,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-export const Route = createFileRoute("/trips/$tripId")({
+export const Route = createFileRoute("/_authenticated/trips/$tripId")({
   head: () => ({
     meta: [
       { title: "行程详情 · Wayfarer" },
