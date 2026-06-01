@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { bindQueryClient } from "@/lib/trips-store";
+import "@/i18n";
 
 
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ interface GeoResult {
 }
 
 export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Props) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [openingHours, setOpeningHours] = useState("");
@@ -105,17 +107,17 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
-            ✨ {initial ? "编辑景点" : "添加新景点"}
+            ✨ {initial ? t("attractionDialog.editTitle") : t("attractionDialog.createTitle")}
           </DialogTitle>
-          <DialogDescription>记录下你想要去的地方,以及它的故事。</DialogDescription>
+          <DialogDescription>{t("attractionDialog.desc")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="att-name">景点名称 *</Label>
+            <Label htmlFor="att-name">{t("attractionDialog.name")}</Label>
             <Input
               id="att-name"
-              placeholder="例如:汉拿山"
+              placeholder={t("attractionDialog.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoFocus
@@ -123,20 +125,20 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="att-hours">开放时间</Label>
+            <Label htmlFor="att-hours">{t("attractionDialog.hours")}</Label>
             <Input
               id="att-hours"
-              placeholder="例如:9:00-17:00,周一闭馆"
+              placeholder={t("attractionDialog.hoursPlaceholder")}
               value={openingHours}
               onChange={(e) => setOpeningHours(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="att-desc">详细描述</Label>
+            <Label htmlFor="att-desc">{t("attractionDialog.description")}</Label>
             <Textarea
               id="att-desc"
-              placeholder="爬山看日出,记得带外套..."
+              placeholder={t("attractionDialog.descPlaceholder")}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -144,12 +146,12 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
           </div>
 
           <div className="space-y-2">
-            <Label>📍 位置选择</Label>
+            <Label>{t("attractionDialog.location")}</Label>
             <div className="rounded-xl border bg-muted/30 p-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="搜索地点(例如:汉拿山)"
+                  placeholder={t("attractionDialog.searchPlaceholder")}
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
                   className="pl-9"
@@ -180,7 +182,7 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
                 <div className="mt-3 flex items-start gap-2 rounded-lg bg-primary/10 px-3 py-2 text-xs">
                   <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-foreground">已标记位置</div>
+                    <div className="font-medium text-foreground">{t("attractionDialog.pinned")}</div>
                     {address && (
                       <div className="line-clamp-2 text-muted-foreground">{address}</div>
                     )}
@@ -197,7 +199,7 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
                     }}
                     className="text-xs text-muted-foreground hover:text-destructive"
                   >
-                    清除
+                    {t("common.clear")}
                   </button>
                 </div>
               )}
@@ -207,10 +209,10 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            取消
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleSave} disabled={!name.trim()}>
-            保存景点
+            {t("attractionDialog.saveSpot")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -61,14 +63,14 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
-            {initial ? "编辑行程" : "创建新计划"}
+            {initial ? t("tripDialog.editTitle") : t("tripDialog.createTitle")}
           </DialogTitle>
-          <DialogDescription>给这趟旅行一个名字和日期。</DialogDescription>
+          <DialogDescription>{t("tripDialog.desc")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label>封面</Label>
+            <Label>{t("tripDialog.cover")}</Label>
             <div className="flex flex-wrap gap-2">
               {EMOJIS.map((e) => (
                 <button
@@ -88,10 +90,10 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="trip-title">行程名称</Label>
+            <Label htmlFor="trip-title">{t("tripDialog.name")}</Label>
             <Input
               id="trip-title"
-              placeholder="例如:济州岛五天游"
+              placeholder={t("tripDialog.namePlaceholder")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               autoFocus
@@ -100,7 +102,7 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="trip-start">出发日期</Label>
+              <Label htmlFor="trip-start">{t("tripDialog.startDate")}</Label>
               <Input
                 id="trip-start"
                 type="date"
@@ -109,7 +111,7 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="trip-end">返回日期</Label>
+              <Label htmlFor="trip-end">{t("tripDialog.endDate")}</Label>
               <Input
                 id="trip-end"
                 type="date"
@@ -118,15 +120,15 @@ export function TripDialog({ open, onOpenChange, onSave, initial }: Props) {
               />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">留空日期会保存为草稿。</p>
+          <p className="text-xs text-muted-foreground">{t("tripDialog.draftHint")}</p>
         </div>
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            取消
+            {t("common.cancel")}
           </Button>
           <Button onClick={save} disabled={!title.trim()}>
-            保存
+            {t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
