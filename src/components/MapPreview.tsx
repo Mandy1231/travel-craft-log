@@ -321,6 +321,24 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
     ? selectedDay.title || t("trips.dayN", { n: dayIdx + 1 })
     : "";
 
+  // Build "A → B → C" sequence for the selected day's visit order
+  const routeSequence = useMemo(() => {
+    if (!isFiltered || !selectedDay) return "";
+    let idx = 0;
+    if (selectedDay) {
+      const before = days.findIndex((d) => d.id === selectedDay.id);
+      idx = days.slice(0, before).reduce((s, d) => s + d.attractions.length, 0);
+    }
+    const letters: string[] = [];
+    selectedDay.attractions.forEach((a) => {
+      if (typeof a.lat === "number" && typeof a.lng === "number") {
+        letters.push(String.fromCharCode(65 + idx));
+      }
+      idx++;
+    });
+    return letters.join(" → ");
+  }, [isFiltered, selectedDay, days]);
+
   return (
     <div className="relative h-full min-h-[460px] w-full overflow-hidden rounded-3xl border-2 border-primary/10 bg-gradient-sky shadow-lift">
       <div ref={containerRef} className="absolute inset-0 z-0" />
