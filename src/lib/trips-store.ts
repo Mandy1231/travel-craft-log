@@ -237,6 +237,7 @@ export const tripsApi = {
   },
 
   async removeDay(_tripId: string, dayId: string) {
+    console.log("[removeDay] deleting dayId:", dayId);
     await supabase.from("days").delete().eq("id", dayId);
     invalidateAll();
   },
