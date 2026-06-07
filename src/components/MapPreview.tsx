@@ -73,7 +73,11 @@ const SPEED_KMH: Record<TransitMode, number> = {
   foot: 5,
   cycling: 15,
   driving: 40, // fallback if OSRM duration missing
+  transit: 20, // avg incl. stops/transfers
 };
+
+// Extra fixed overhead (min) added to transit estimates for waits/transfers.
+const TRANSIT_OVERHEAD_MIN = 8;
 
 function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
   if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
