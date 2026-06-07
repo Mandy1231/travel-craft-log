@@ -79,11 +79,40 @@ const SPEED_KMH: Record<TransitMode, number> = {
 // Extra fixed overhead (min) added to transit estimates for waits/transfers.
 const TRANSIT_OVERHEAD_MIN = 8;
 
+type TransitSubmode = "minibus" | "bus" | "metro" | "train";
+
+// Recommend a specific transit vehicle based on trip distance.
+function recommendTransitSubmode(km: number): TransitSubmode {
+  if (km <= 5) return "minibus";
+  if (km <= 15) return "bus";
+  if (km <= 40) return "metro";
+  return "train";
+}
+
+// Effective avg speed (km/h) for a transit submode incl. typical stops.
+const TRANSIT_SUBMODE_SPEED: Record<TransitSubmode, number> = {
+  minibus: 18,
+  bus: 22,
+  metro: 32,
+  train: 60,
+};
+
+// Fixed overhead per submode (min) for waiting / transfers / walking to station.
+const TRANSIT_SUBMODE_OVERHEAD: Record<TransitSubmode, number> = {
+  minibus: 5,
+  bus: 8,
+  metro: 10,
+  train: 15,
+};
+
 function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
   if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
-  const base = Math.round((km / SPEED_KMH[mode]) * 60);
-  const total = mode === "transit" ? base + TRANSIT_OVERHEAD_MIN : base;
-  return Math.max(1, total);
+  if (mode === "transit") {
+    const sub = recommendTransitSubmode(km);
+    const base = Math.round((km / TRANSIT_SUBMODE_SPEED[sub]) * 60);
+    return Math.max(1, base + TRANSIT_SUBMODE_OVERHEAD[sub]);
+  }
+  return Math.max(1, Math.round((km / SPEED_KMH[mode]) * 60));
 }
 
 function recommendModeForDistance(km: number): TransitMode {
