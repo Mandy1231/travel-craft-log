@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,10 +16,14 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated")({
+  // Supabase persists the session in localStorage, which the server cannot
+  // read. Skip SSR for the protected subtree so the gate only runs on the
+  // client where the session is actually available — otherwise hard refreshes
+  // bounce between /login and the protected page.
+  ssr: false,
   beforeLoad: async ({ location }) => {
-    if (typeof window === "undefined") return;
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
       throw redirect({
         to: "/login",
         search: { redirect: location.href },
@@ -32,21 +36,23 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthedLayout() {
   const { t } = useTranslation();
   const [email, setEmail] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setEmail(session?.user?.email ?? null);
-      if (!session) navigate({ to: "/login" });
+    // Read once on mount. Sign-out is already handled by the root listener
+    // (which invalidates the router and re-runs this beforeLoad → redirects
+    // to /login). Adding a second listener here caused a redirect loop on
+    // mobile after sign-in because TOKEN_REFRESHED / INITIAL_SESSION events
+    // raced with navigation.
+    supabase.auth.getSession().then(({ data }) => {
+      setEmail(data.session?.user?.email ?? null);
     });
-    return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success(t("auth.signedOut"));
   };
+
 
   return (
     <div className="min-h-screen">
