@@ -425,7 +425,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
               <RouteIcon className="h-4 w-4" />
             )}
           </div>
-          <div className="flex flex-col leading-tight">
+          <div className="flex flex-col leading-tight min-w-0">
             <span className="text-xs font-semibold text-foreground">
               {routeStatus === "loading"
                 ? t("trips.routeLoading")
@@ -434,6 +434,11 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
                     min: minutes,
                   })}
             </span>
+            {isFiltered && routeSequence && (
+              <span className="truncate text-[11px] font-semibold text-primary">
+                {t("trips.routeOrder", { sequence: routeSequence })}
+              </span>
+            )}
             <span className="text-[10px] text-muted-foreground">
               {isFiltered
                 ? mode === "transit"
