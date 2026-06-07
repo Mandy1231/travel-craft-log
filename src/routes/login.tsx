@@ -34,10 +34,14 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: redirect, replace: true });
+    // Use getSession (local, no network) to avoid a race with the post-sign-in
+    // navigation. getUser() is a network call and on mobile it sometimes
+    // resolved AFTER navigate(), bouncing the user back to /login.
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate({ to: redirect, replace: true });
     });
   }, [navigate, redirect]);
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
