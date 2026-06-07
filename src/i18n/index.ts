@@ -249,6 +249,7 @@ const zhCN = {
     routeLoading: "正在规划路线…",
     routeFailed: "无法获取路线，显示直线连接",
     routeSummary: "{{km}} 公里 · {{min}} 分钟",
+    routeOrder: "最佳路线：{{sequence}}",
   },
   tripDialog: {
     editTitle: "编辑行程",
