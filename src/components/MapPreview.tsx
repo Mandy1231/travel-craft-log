@@ -318,6 +318,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
         <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-card/95 p-1 shadow-soft backdrop-blur">
           {([
             { id: "foot" as const, Icon: Footprints, label: t("trips.transitWalking") },
+            { id: "transit" as const, Icon: Bus, label: t("trips.transitTransit") },
             { id: "driving" as const, Icon: Car, label: t("trips.transitDriving") },
             { id: "cycling" as const, Icon: Bike, label: t("trips.transitCycling") },
           ]).map(({ id, Icon, label }) => {
