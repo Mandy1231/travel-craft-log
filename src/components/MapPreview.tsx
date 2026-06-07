@@ -266,10 +266,18 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
 
         if (pts.length > 1) {
           if (isFiltered && osrmRoute && osrmRoute.coords.length > 1) {
+            // Dark casing underneath for stronger contrast
+            L.polyline(osrmRoute.coords, {
+              color: "#0f172a",
+              weight: 9,
+              opacity: 0.35,
+            }).addTo(layer);
             L.polyline(osrmRoute.coords, {
               color,
-              weight: 5,
-              opacity: 0.85,
+              weight: 6,
+              opacity: 1,
+              lineCap: "round",
+              lineJoin: "round",
             }).addTo(layer);
           } else {
             L.polyline(pts, {
