@@ -266,10 +266,18 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
 
         if (pts.length > 1) {
           if (isFiltered && osrmRoute && osrmRoute.coords.length > 1) {
+            // Dark casing underneath for stronger contrast
+            L.polyline(osrmRoute.coords, {
+              color: "#0f172a",
+              weight: 9,
+              opacity: 0.35,
+            }).addTo(layer);
             L.polyline(osrmRoute.coords, {
               color,
-              weight: 5,
-              opacity: 0.85,
+              weight: 6,
+              opacity: 1,
+              lineCap: "round",
+              lineJoin: "round",
             }).addTo(layer);
           } else {
             L.polyline(pts, {
@@ -312,6 +320,24 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
   const dayLabel = selectedDay
     ? selectedDay.title || t("trips.dayN", { n: dayIdx + 1 })
     : "";
+
+  // Build "A → B → C" sequence for the selected day's visit order
+  const routeSequence = useMemo(() => {
+    if (!isFiltered || !selectedDay) return "";
+    let idx = 0;
+    if (selectedDay) {
+      const before = days.findIndex((d) => d.id === selectedDay.id);
+      idx = days.slice(0, before).reduce((s, d) => s + d.attractions.length, 0);
+    }
+    const letters: string[] = [];
+    selectedDay.attractions.forEach((a) => {
+      if (typeof a.lat === "number" && typeof a.lng === "number") {
+        letters.push(String.fromCharCode(65 + idx));
+      }
+      idx++;
+    });
+    return letters.join(" → ");
+  }, [isFiltered, selectedDay, days]);
 
   return (
     <div className="relative h-full min-h-[460px] w-full overflow-hidden rounded-3xl border-2 border-primary/10 bg-gradient-sky shadow-lift">
@@ -399,7 +425,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
               <RouteIcon className="h-4 w-4" />
             )}
           </div>
-          <div className="flex flex-col leading-tight">
+          <div className="flex flex-col leading-tight min-w-0">
             <span className="text-xs font-semibold text-foreground">
               {routeStatus === "loading"
                 ? t("trips.routeLoading")
@@ -408,6 +434,11 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
                     min: minutes,
                   })}
             </span>
+            {isFiltered && routeSequence && (
+              <span className="truncate text-[11px] font-semibold text-primary">
+                {t("trips.routeOrder", { sequence: routeSequence })}
+              </span>
+            )}
             <span className="text-[10px] text-muted-foreground">
               {isFiltered
                 ? mode === "transit"
