@@ -224,131 +224,29 @@ function TripDetail() {
           </div>
 
           <ol className="space-y-4">
-            {trip.days.map((day, idx) => {
-              const colorVar = DAY_VARS[idx % DAY_VARS.length];
-              const date = dayDate(idx);
-              return (
-                <li
-                  key={day.id}
-                  className={`overflow-hidden rounded-2xl border bg-background/70 transition-shadow ${
-                    selectedDayId === day.id ? "ring-2 ring-offset-2 ring-offset-background shadow-lift" : ""
-                  }`}
-                  style={{
-                    borderLeft: `4px solid var(${colorVar})`,
-                    ...(selectedDayId === day.id
-                      ? ({ "--tw-ring-color": `var(${colorVar})` } as React.CSSProperties)
-                      : {}),
-                  }}
-                >
-                  <div className="flex items-center justify-between gap-2 bg-gradient-sky/50 px-4 py-2.5">
-                    <div className="flex min-w-0 flex-1 items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setSelectedDayId((cur) => (cur === day.id ? null : day.id))
-                        }
-                        title={
-                          selectedDayId === day.id
-                            ? t("trips.showingOnMap")
-                            : t("trips.showOnMap")
-                        }
-                        className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold text-white transition-transform hover:scale-110 ${
-                          selectedDayId === day.id ? "ring-2 ring-offset-1 ring-offset-background" : ""
-                        }`}
-                        style={{
-                          background: `var(${colorVar})`,
-                          ...(selectedDayId === day.id
-                            ? ({ "--tw-ring-color": `var(${colorVar})` } as React.CSSProperties)
-                            : {}),
-                        }}
-                      >
-                        {idx + 1}
-                      </button>
-                      {editingDayId === day.id ? (
-                        <div className="flex flex-1 items-center gap-1">
-                          <Input
-                            value={editingDayTitle}
-                            onChange={(e) => setEditingDayTitle(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") commitEditDay();
-                              if (e.key === "Escape") setEditingDayId(null);
-                            }}
-                            autoFocus
-                            className="h-8"
-                          />
-                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={commitEditDay}>
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7"
-                            onClick={() => setEditingDayId(null)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => startEditDay(day, idx)}
-                          className="group flex min-w-0 flex-1 items-center gap-2 text-left"
-                        >
-                          <h3 className="truncate font-display text-base font-semibold">
-                            {day.title || t("trips.dayN", { n: idx + 1 })}
-                          </h3>
-                          {date && (
-                            <span className="shrink-0 text-xs text-muted-foreground">
-                              ({date})
-                            </span>
-                          )}
-                          <Pencil className="h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
-                        </button>
-                      )}
-                    </div>
-                    {editingDayId !== day.id && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button size="icon" variant="ghost" className="h-7 w-7">
-                            ⋮
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleOptimize(day)}>
-                            <Wand2 className="mr-2 h-3.5 w-3.5" />
-                            {t("trips.optimize")}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => startEditDay(day, idx)}>
-                            <Pencil className="mr-2 h-3.5 w-3.5" />
-                            {t("trips.editTitle")}
-                          </DropdownMenuItem>
-                          {trip.days.length > 1 && (
-                            <>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-destructive"
-                                onClick={() => tripsApi.removeDay(trip.id, day.id)}
-                              >
-                                <Trash2 className="mr-2 h-3.5 w-3.5" />
-                                {t("trips.deleteDay")}
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </div>
-
-                  <DayAttractions
-                    trip={trip}
-                    day={day}
-                    dayIndex={idx}
-                    colorVar={colorVar}
-                    onEdit={(a) => setAddCtx({ dayId: day.id, attraction: a })}
-                    onAdd={() => setAddCtx({ dayId: day.id })}
-                  />
-                </li>
-              );
-            })}
+            {trip.days.map((day, idx) => (
+              <DayCard
+                key={day.id}
+                trip={trip}
+                day={day}
+                dayIndex={idx}
+                colorVar={DAY_VARS[idx % DAY_VARS.length]}
+                date={dayDate(idx)}
+                selectedDayId={selectedDayId}
+                editingDayId={editingDayId}
+                editingDayTitle={editingDayTitle}
+                onToggleMap={(id) => setSelectedDayId((cur) => (cur === id ? null : id))}
+                onStartEdit={(day, idx) => {
+                  setEditingDayId(day.id);
+                  setEditingDayTitle(day.title ?? t("trips.dayN", { n: idx + 1 }));
+                }}
+                onCommitEdit={commitEditDay}
+                onCancelEdit={() => setEditingDayId(null)}
+                onTitleChange={setEditingDayTitle}
+                onOptimize={handleOptimize}
+                onAddCtx={setAddCtx}
+              />
+            ))}
           </ol>
         </section>
       </div>
