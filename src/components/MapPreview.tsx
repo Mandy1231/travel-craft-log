@@ -79,11 +79,40 @@ const SPEED_KMH: Record<TransitMode, number> = {
 // Extra fixed overhead (min) added to transit estimates for waits/transfers.
 const TRANSIT_OVERHEAD_MIN = 8;
 
+type TransitSubmode = "minibus" | "bus" | "metro" | "train";
+
+// Recommend a specific transit vehicle based on trip distance.
+function recommendTransitSubmode(km: number): TransitSubmode {
+  if (km <= 5) return "minibus";
+  if (km <= 15) return "bus";
+  if (km <= 40) return "metro";
+  return "train";
+}
+
+// Effective avg speed (km/h) for a transit submode incl. typical stops.
+const TRANSIT_SUBMODE_SPEED: Record<TransitSubmode, number> = {
+  minibus: 18,
+  bus: 22,
+  metro: 32,
+  train: 60,
+};
+
+// Fixed overhead per submode (min) for waiting / transfers / walking to station.
+const TRANSIT_SUBMODE_OVERHEAD: Record<TransitSubmode, number> = {
+  minibus: 5,
+  bus: 8,
+  metro: 10,
+  train: 15,
+};
+
 function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
   if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
-  const base = Math.round((km / SPEED_KMH[mode]) * 60);
-  const total = mode === "transit" ? base + TRANSIT_OVERHEAD_MIN : base;
-  return Math.max(1, total);
+  if (mode === "transit") {
+    const sub = recommendTransitSubmode(km);
+    const base = Math.round((km / TRANSIT_SUBMODE_SPEED[sub]) * 60);
+    return Math.max(1, base + TRANSIT_SUBMODE_OVERHEAD[sub]);
+  }
+  return Math.max(1, Math.round((km / SPEED_KMH[mode]) * 60));
 }
 
 function recommendModeForDistance(km: number): TransitMode {
@@ -381,9 +410,11 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
             </span>
             <span className="text-[10px] text-muted-foreground">
               {isFiltered
-                ? mode === recommendedMode
-                  ? t(`trips.recommendedMode_${recommendedMode}` as const)
-                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : mode === "cycling" ? "Cycling" : "Transit"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
+                ? mode === "transit"
+                  ? `${t(`trips.recommendedMode_transit` as const)} · ${t("trips.transitSuggested", { name: t(`trips.transitSubmode_${recommendTransitSubmode(routeKm)}` as const) })}`
+                  : mode === recommendedMode
+                    ? t(`trips.recommendedMode_${recommendedMode}` as const)
+                    : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : "Cycling"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
                 : routeStatus === "error"
                   ? t("trips.routeFailed")
                   : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
