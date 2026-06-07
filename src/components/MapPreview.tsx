@@ -410,9 +410,11 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
             </span>
             <span className="text-[10px] text-muted-foreground">
               {isFiltered
-                ? mode === recommendedMode
-                  ? t(`trips.recommendedMode_${recommendedMode}` as const)
-                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : mode === "cycling" ? "Cycling" : "Transit"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
+                ? mode === "transit"
+                  ? `${t(`trips.recommendedMode_transit` as const)} · ${t("trips.transitSuggested", { name: t(`trips.transitSubmode_${recommendTransitSubmode(routeKm)}` as const) })}`
+                  : mode === recommendedMode
+                    ? t(`trips.recommendedMode_${recommendedMode}` as const)
+                    : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : "Cycling"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
                 : routeStatus === "error"
                   ? t("trips.routeFailed")
                   : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
