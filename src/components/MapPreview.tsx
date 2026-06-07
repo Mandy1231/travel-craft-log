@@ -9,7 +9,7 @@ interface Props {
   onClearSelection?: () => void;
 }
 
-type TransitMode = "foot" | "driving" | "cycling";
+type TransitMode = "foot" | "driving" | "cycling" | "transit";
 
 const DAY_COLOR_VARS = [
   "--day-1",
