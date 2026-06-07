@@ -383,7 +383,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
               {isFiltered
                 ? mode === recommendedMode
                   ? t(`trips.recommendedMode_${recommendedMode}` as const)
-                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : "Cycling"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
+                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : mode === "cycling" ? "Cycling" : "Transit"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
                 : routeStatus === "error"
                   ? t("trips.routeFailed")
                   : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
