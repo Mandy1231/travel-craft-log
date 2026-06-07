@@ -37,7 +37,7 @@ import { MapPreview } from "@/components/MapPreview";
 import { AddAttractionDialog } from "@/components/AddAttractionDialog";
 import { TripDialog } from "@/components/TripDialog";
 import { VisibilityBadge } from "@/components/VisibilityBadge";
-import { useTrip, tripsApi, type Attraction, type Day } from "@/lib/trips-store";
+import { useTrip, tripsApi, type Attraction, type Day, type Trip } from "@/lib/trips-store";
 import { optimizeDayOrder } from "@/lib/route-optimize";
 import { toast } from "sonner";
 import {
