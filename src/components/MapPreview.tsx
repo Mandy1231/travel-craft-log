@@ -81,12 +81,15 @@ const TRANSIT_OVERHEAD_MIN = 8;
 
 function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
   if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
-  return Math.max(1, Math.round((km / SPEED_KMH[mode]) * 60));
+  const base = Math.round((km / SPEED_KMH[mode]) * 60);
+  const total = mode === "transit" ? base + TRANSIT_OVERHEAD_MIN : base;
+  return Math.max(1, total);
 }
 
 function recommendModeForDistance(km: number): TransitMode {
   if (km <= 2) return "foot";
   if (km <= 8) return "cycling";
+  if (km <= 30) return "transit";
   return "driving";
 }
 
