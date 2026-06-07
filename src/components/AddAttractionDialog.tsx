@@ -242,7 +242,8 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             {t("common.cancel")}
           </Button>
-          <Button onClick={handleSave} disabled={!name.trim()}>
+          <Button onClick={handleSave} disabled={!name.trim() || saving}>
+            {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t("attractionDialog.saveSpot")}
           </Button>
         </DialogFooter>
