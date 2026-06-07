@@ -112,6 +112,7 @@ const en = {
     routeLoading: "Finding best route…",
     routeFailed: "Couldn't fetch route, showing straight line",
     routeSummary: "{{km}} km · {{min}} min",
+    routeOrder: "Best route: {{sequence}}",
   },
   tripDialog: {
     editTitle: "Edit trip",
