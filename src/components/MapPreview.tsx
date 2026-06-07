@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Day } from "@/lib/trips-store";
-import { MapPin, Route as RouteIcon, Loader2, Footprints, Car, Bike } from "lucide-react";
+import { MapPin, Route as RouteIcon, Loader2, Footprints, Car, Bike, Bus } from "lucide-react";
 
 interface Props {
   days: Day[];
@@ -9,7 +9,7 @@ interface Props {
   onClearSelection?: () => void;
 }
 
-type TransitMode = "foot" | "driving" | "cycling";
+type TransitMode = "foot" | "driving" | "cycling" | "transit";
 
 const DAY_COLOR_VARS = [
   "--day-1",
@@ -73,16 +73,23 @@ const SPEED_KMH: Record<TransitMode, number> = {
   foot: 5,
   cycling: 15,
   driving: 40, // fallback if OSRM duration missing
+  transit: 20, // avg incl. stops/transfers
 };
+
+// Extra fixed overhead (min) added to transit estimates for waits/transfers.
+const TRANSIT_OVERHEAD_MIN = 8;
 
 function minutesForMode(km: number, mode: TransitMode, drivingMinutes?: number) {
   if (mode === "driving" && typeof drivingMinutes === "number") return drivingMinutes;
-  return Math.max(1, Math.round((km / SPEED_KMH[mode]) * 60));
+  const base = Math.round((km / SPEED_KMH[mode]) * 60);
+  const total = mode === "transit" ? base + TRANSIT_OVERHEAD_MIN : base;
+  return Math.max(1, total);
 }
 
 function recommendModeForDistance(km: number): TransitMode {
   if (km <= 2) return "foot";
   if (km <= 8) return "cycling";
+  if (km <= 30) return "transit";
   return "driving";
 }
 
@@ -311,6 +318,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
         <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-card/95 p-1 shadow-soft backdrop-blur">
           {([
             { id: "foot" as const, Icon: Footprints, label: t("trips.transitWalking") },
+            { id: "transit" as const, Icon: Bus, label: t("trips.transitTransit") },
             { id: "driving" as const, Icon: Car, label: t("trips.transitDriving") },
             { id: "cycling" as const, Icon: Bike, label: t("trips.transitCycling") },
           ]).map(({ id, Icon, label }) => {
@@ -375,7 +383,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
               {isFiltered
                 ? mode === recommendedMode
                   ? t(`trips.recommendedMode_${recommendedMode}` as const)
-                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : "Cycling"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
+                  : `${t(`trips.transit${mode === "foot" ? "Walking" : mode === "driving" ? "Driving" : mode === "cycling" ? "Cycling" : "Transit"}` as const)} · ${t(`trips.recommendedMode_${recommendedMode}` as const)}`
                 : routeStatus === "error"
                   ? t("trips.routeFailed")
                   : `${allPoints.length} ${t("trips.spotsSuffix")} · ${visibleDays.filter((d) => d.attractions.length).length} ${t("trips.daysSuffix")}`}
