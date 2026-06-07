@@ -386,6 +386,7 @@ const zhTW = {
     routeLoading: "正在規劃路線…",
     routeFailed: "無法取得路線，顯示直線連接",
     routeSummary: "{{km}} 公里 · {{min}} 分鐘",
+    routeOrder: "最佳路線：{{sequence}}",
   },
   tripDialog: {
     editTitle: "編輯行程",
