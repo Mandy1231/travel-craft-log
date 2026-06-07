@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Day } from "@/lib/trips-store";
-import { MapPin, Route as RouteIcon, Loader2, Footprints, Car, Bike } from "lucide-react";
+import { MapPin, Route as RouteIcon, Loader2, Footprints, Car, Bike, Bus } from "lucide-react";
 
 interface Props {
   days: Day[];
