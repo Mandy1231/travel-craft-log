@@ -134,12 +134,22 @@ function RootComponent() {
   useEffect(() => {
     bindQueryClient(queryClient);
     applyStoredLanguage();
+    let unsub: (() => void) | undefined;
     import("@/integrations/supabase/client").then(({ supabase }) => {
-      supabase.auth.onAuthStateChange(() => {
-        queryClient.invalidateQueries();
+      const { data } = supabase.auth.onAuthStateChange((event) => {
+        // Only react to real identity transitions. TOKEN_REFRESHED /
+        // INITIAL_SESSION fire repeatedly (every tab focus, ~hourly) and
+        // would otherwise loop router.invalidate() with refetches —
+        // visible on mobile as the UI flashing/flicking between languages.
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
         router.invalidate();
+        if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
       });
+      unsub = () => data.subscription.unsubscribe();
     });
+    return () => {
+      unsub?.();
+    };
   }, [queryClient, router]);
 
   return (
