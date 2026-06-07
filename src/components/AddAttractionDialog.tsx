@@ -81,15 +81,46 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
     };
   }, [searchQ]);
 
-  const handleSave = () => {
-    if (!name.trim()) return;
+  const [saving, setSaving] = useState(false);
+
+  const geocodeName = async (q: string): Promise<{ lat: number; lng: number } | null> => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,
+        { headers: { Accept: "application/json" } },
+      );
+      const data = (await res.json()) as GeoResult[];
+      if (data[0]) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    } catch {
+      /* ignore */
+    }
+    return null;
+  };
+
+  const handleSave = async () => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    setSaving(true);
+    let finalLat = lat;
+    let finalLng = lng;
+    // If user changed the name and didn't pick a new location, re-geocode by name
+    const nameChanged = trimmed !== (initial?.name ?? "");
+    const locationUnchanged = lat === initial?.lat && lng === initial?.lng;
+    if (nameChanged && locationUnchanged) {
+      const geo = await geocodeName(trimmed);
+      if (geo) {
+        finalLat = geo.lat;
+        finalLng = geo.lng;
+      }
+    }
     onSave({
-      name: name.trim(),
+      name: trimmed,
       description: description.trim() || undefined,
       openingHours: openingHours.trim() || undefined,
-      lat,
-      lng,
+      lat: finalLat,
+      lng: finalLng,
     });
+    setSaving(false);
     onOpenChange(false);
   };
 
