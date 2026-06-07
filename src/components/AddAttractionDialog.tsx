@@ -103,14 +103,24 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
     setSaving(true);
     let finalLat = lat;
     let finalLng = lng;
-    // If user changed the name and didn't pick a new location, re-geocode by name
-    const nameChanged = trimmed !== (initial?.name ?? "");
-    const locationUnchanged = lat === initial?.lat && lng === initial?.lng;
-    if (nameChanged && locationUnchanged) {
-      const geo = await geocodeName(trimmed);
+    // Priority 1: if the user typed something in the search box but didn't click a result, geocode that text
+    const queryText = searchQ.trim();
+    if (queryText) {
+      const geo = await geocodeName(queryText);
       if (geo) {
         finalLat = geo.lat;
         finalLng = geo.lng;
+      }
+    } else {
+      // Priority 2: if name changed and location wasn't manually updated, geocode by name
+      const nameChanged = trimmed !== (initial?.name ?? "");
+      const locationUnchanged = lat === initial?.lat && lng === initial?.lng;
+      if (nameChanged && locationUnchanged) {
+        const geo = await geocodeName(trimmed);
+        if (geo) {
+          finalLat = geo.lat;
+          finalLng = geo.lng;
+        }
       }
     }
     onSave({
@@ -123,6 +133,7 @@ export function AddAttractionDialog({ open, onOpenChange, onSave, initial }: Pro
     setSaving(false);
     onOpenChange(false);
   };
+
 
   const pickResult = (r: GeoResult) => {
     setLat(parseFloat(r.lat));
