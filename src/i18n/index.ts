@@ -81,6 +81,7 @@ const en = {
     dayN: "Day {{n}}",
     editTitle: "Edit title",
     deleteDay: "Delete this day",
+    confirmDeleteDay: "Delete \"{{name}}\"? This cannot be undone.",
     addSpot: "Add attraction",
     dragHint: "Drag to reorder",
     optimize: "Optimize route",
