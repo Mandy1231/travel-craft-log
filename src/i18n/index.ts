@@ -180,6 +180,10 @@ const zhCN = {
     loginTitle: "登录 · Wayfarer",
     loginDesc: "登录 Wayfarer,管理你的旅行计划。",
     operationFailed: "操作失败",
+    noAccount: "还没有账号？",
+    haveAccount: "已经有账号？",
+    loginSubtitle: "请使用下方表单登录。",
+    signupSubtitle: "注册开始规划你的行程。",
   },
   trips: {
     pageTitle: "我的旅行计划 · Wayfarer",
