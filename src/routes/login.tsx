@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
 import { Compass, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -74,9 +74,7 @@ function LoginPage() {
 
   return (
     <main className="relative grid min-h-screen place-items-center px-5 py-12">
-      <div className="absolute right-5 top-5 z-10">
-        <LanguageSwitcher />
-      </div>
+
 
       <div className="w-full max-w-md">
         <div className="rounded-[2rem] border border-white/60 bg-white/95 p-8 shadow-lift backdrop-blur-xl sm:p-10">
