@@ -39,6 +39,10 @@ const en = {
     loginTitle: "Sign in · Wayfarer",
     loginDesc: "Sign in to Wayfarer to manage your trips.",
     operationFailed: "Operation failed",
+    noAccount: "Don't have an account?",
+    haveAccount: "Already have an account?",
+    loginSubtitle: "Please log in using the form below.",
+    signupSubtitle: "Sign up to start planning your trips.",
   },
   trips: {
     pageTitle: "My trips · Wayfarer",
