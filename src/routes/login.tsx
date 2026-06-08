@@ -85,7 +85,7 @@ function LoginPage() {
             <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-cta shadow-lift">
               <Compass className="h-7 w-7 text-white" />
             </div>
-            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="font-display font-bold tracking-tight text-foreground text-xs">
               {mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">

@@ -23,7 +23,7 @@ const en = {
     clear: "Clear",
   },
   auth: {
-    welcomeBack: "Welcome back",
+    welcomeBack: "Welcome to Wayfarer",
     accountCreated: "Account created",
     signedOut: "Signed out",
     login: "Sign in",
@@ -164,7 +164,7 @@ const zhCN = {
     clear: "清除",
   },
   auth: {
-    welcomeBack: "欢迎回来",
+    welcomeBack: "欢迎来到 Wayfarer",
     accountCreated: "账号已创建",
     signedOut: "已退出登录",
     login: "登录",
@@ -305,7 +305,7 @@ const zhTW = {
     clear: "清除",
   },
   auth: {
-    welcomeBack: "歡迎回來",
+    welcomeBack: "歡迎來到 Wayfarer",
     accountCreated: "帳號已建立",
     signedOut: "已登出",
     login: "登入",
