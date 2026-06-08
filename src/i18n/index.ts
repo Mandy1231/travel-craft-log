@@ -321,6 +321,10 @@ const zhTW = {
     loginTitle: "登入 · Wayfarer",
     loginDesc: "登入 Wayfarer，管理你的旅行計畫。",
     operationFailed: "操作失敗",
+    noAccount: "還沒有帳號？",
+    haveAccount: "已經有帳號？",
+    loginSubtitle: "請使用下方表單登入。",
+    signupSubtitle: "註冊開始規劃你的行程。",
   },
   trips: {
     pageTitle: "我的旅行計畫 · Wayfarer",
