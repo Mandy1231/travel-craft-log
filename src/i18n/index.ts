@@ -438,8 +438,9 @@ if (!i18n.isInitialized) {
     // Use a deterministic initial language so SSR markup matches the first
     // client render. We swap to the stored / browser preference inside a
     // post-mount effect to avoid hydration mismatches.
-    lng: "zh-TW",
-    fallbackLng: "zh-TW",
+    lng: "en",
+    fallbackLng: "en",
+
     supportedLngs: [...SUPPORTED],
     interpolation: { escapeValue: false },
   });
@@ -464,7 +465,7 @@ export function applyStoredLanguage() {
   const stored = window.localStorage.getItem(STORAGE_KEY) as Lang | null;
   const next = stored && (SUPPORTED as readonly string[]).includes(stored)
     ? stored
-    : pickBrowserLang() ?? "zh-TW";
+    : pickBrowserLang() ?? "en";
   if (next !== i18n.language) i18n.changeLanguage(next);
 }
 
