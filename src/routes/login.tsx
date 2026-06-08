@@ -28,10 +28,29 @@ function LoginPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [view, setView] = useState<"auth" | "forgot">("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleForgot = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success(t("auth.resetEmailSent"));
+      setView("auth");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Use getSession (local, no network) to avoid a race with the post-sign-in
@@ -84,40 +103,26 @@ function LoginPage() {
               <Compass className="h-16 w-16 text-slate-950" />
             </div>
             <h1 className="font-display font-bold tracking-tight text-foreground sm:text-2xl text-2xl">
-              {mode === "login" ? "Welcome to Wayfarer" : t("auth.createAccount")}
+              {view === "forgot"
+                ? t("auth.forgotTitle")
+                : mode === "login"
+                  ? "Welcome to Wayfarer"
+                  : t("auth.createAccount")}
             </h1>
+            {view === "forgot" && (
+              <p className="mt-2 text-sm text-muted-foreground">{t("auth.forgotDesc")}</p>
+            )}
           </div>
 
 
-          <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")}>
-            <TabsList className="mb-6 grid w-full grid-cols-2 rounded-full bg-muted/70 p-1">
-              <TabsTrigger value="login" className="rounded-full">{t("auth.login")}</TabsTrigger>
-              <TabsTrigger value="signup" className="rounded-full">{t("auth.signup")}</TabsTrigger>
-            </TabsList>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <TabsContent value="signup" className="m-0 space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="name" className="text-xs font-semibold text-muted-foreground">
-                    {t("auth.displayName")}
-                  </Label>
-                  <Input
-                    id="name"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder={t("auth.travelerPlaceholder")}
-                    autoComplete="name"
-                    className="h-12 rounded-xl border-border bg-muted/30"
-                  />
-                </div>
-              </TabsContent>
-
+          {view === "forgot" ? (
+            <form onSubmit={handleForgot} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground">
+                <Label htmlFor="forgot-email" className="text-xs font-semibold text-muted-foreground">
                   {t("auth.email")}
                 </Label>
                 <Input
-                  id="email"
+                  id="forgot-email"
                   type="email"
                   required
                   value={email}
@@ -127,33 +132,100 @@ function LoginPage() {
                   className="h-12 rounded-xl border-border bg-muted/30"
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-xs font-semibold text-muted-foreground">
-                  {t("auth.password")}
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t("auth.minChars")}
-                  autoComplete={mode === "login" ? "current-password" : "new-password"}
-                  className="h-12 rounded-xl border-border bg-muted/30"
-                />
-              </div>
-
               <Button
                 type="submit"
                 className="h-10 w-full rounded-xl border-0 bg-slate-900 font-semibold text-white shadow-sm hover:bg-slate-800 text-sm"
                 disabled={loading}
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {mode === "login" ? t("auth.login") : t("auth.createAccount")}
+                {t("auth.sendResetLink")}
               </Button>
+              <button
+                type="button"
+                onClick={() => setView("auth")}
+                className="block w-full text-center text-xs font-medium text-muted-foreground hover:text-foreground"
+              >
+                {t("auth.backToLogin")}
+              </button>
             </form>
-          </Tabs>
+          ) : (
+            <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")}>
+              <TabsList className="mb-6 grid w-full grid-cols-2 rounded-full bg-muted/70 p-1">
+                <TabsTrigger value="login" className="rounded-full">{t("auth.login")}</TabsTrigger>
+                <TabsTrigger value="signup" className="rounded-full">{t("auth.signup")}</TabsTrigger>
+              </TabsList>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <TabsContent value="signup" className="m-0 space-y-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="name" className="text-xs font-semibold text-muted-foreground">
+                      {t("auth.displayName")}
+                    </Label>
+                    <Input
+                      id="name"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      placeholder={t("auth.travelerPlaceholder")}
+                      autoComplete="name"
+                      className="h-12 rounded-xl border-border bg-muted/30"
+                    />
+                  </div>
+                </TabsContent>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground">
+                    {t("auth.email")}
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    className="h-12 rounded-xl border-border bg-muted/30"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password" className="text-xs font-semibold text-muted-foreground">
+                      {t("auth.password")}
+                    </Label>
+                    {mode === "login" && (
+                      <button
+                        type="button"
+                        onClick={() => setView("forgot")}
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground"
+                      >
+                        {t("auth.forgotPassword")}
+                      </button>
+                    )}
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    minLength={6}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t("auth.minChars")}
+                    autoComplete={mode === "login" ? "current-password" : "new-password"}
+                    className="h-12 rounded-xl border-border bg-muted/30"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="h-10 w-full rounded-xl border-0 bg-slate-900 font-semibold text-white shadow-sm hover:bg-slate-800 text-sm"
+                  disabled={loading}
+                >
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {mode === "login" ? t("auth.login") : t("auth.createAccount")}
+                </Button>
+              </form>
+            </Tabs>
+          )}
 
           <p className="mt-6 text-center text-xs text-muted-foreground">{t("auth.terms")}</p>
         </div>
