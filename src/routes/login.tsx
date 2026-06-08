@@ -83,7 +83,7 @@ function LoginPage() {
             <div className="mb-5 grid place-items-center">
               <Compass className="h-16 w-16 text-slate-950" />
             </div>
-            <h1 className="font-display font-bold tracking-tight text-foreground sm:text-4xl text-2xl">
+            <h1 className="font-display font-bold tracking-tight text-foreground sm:text-2xl text-2xl">
               {mode === "login" ? "Welcome to Wayfarer" : t("auth.createAccount")}
             </h1>
           </div>
