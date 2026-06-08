@@ -80,16 +80,14 @@ function LoginPage() {
         <div className="rounded-[2rem] border border-white/60 bg-white/95 p-8 shadow-lift backdrop-blur-xl sm:p-10">
           {/* Brand */}
           <div className="mb-6 flex flex-col items-center text-center">
-            <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-cta shadow-lift">
-              <Compass className="h-7 w-7 text-white" />
+            <div className="mb-5 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-cta shadow-lift">
+              <Compass className="h-10 w-10 text-white" />
             </div>
-            <h1 className="font-display font-bold tracking-tight text-foreground text-lg">
+            <h1 className="font-display font-bold tracking-tight text-foreground text-3xl sm:text-4xl">
               {mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {mode === "login" ? t("auth.loginSubtitle") : t("auth.signupSubtitle")}
-            </p>
           </div>
+
 
           <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")}>
             <TabsList className="mb-6 grid w-full grid-cols-2 rounded-full bg-muted/70 p-1">
