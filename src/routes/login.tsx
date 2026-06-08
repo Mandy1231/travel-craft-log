@@ -146,7 +146,7 @@ function LoginPage() {
 
               <Button
                 type="submit"
-                className="h-12 w-full rounded-xl border-0 bg-gradient-cta text-base font-semibold text-white shadow-lift hover:opacity-95"
+                className="h-12 w-full rounded-xl border-0 bg-gradient-cta font-semibold text-white shadow-lift hover:opacity-95 text-sm"
                 disabled={loading}
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
