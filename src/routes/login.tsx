@@ -77,7 +77,7 @@ function LoginPage() {
 
 
       <div className="w-full max-w-md">
-        <div className="rounded-[2rem] border border-white/60 bg-white/95 p-8 shadow-lift backdrop-blur-xl sm:p-10">
+        <div className="rounded-[2rem] border border-white/60 bg-white/95 p-8 shadow-lift backdrop-blur-xl sm:p-10 shadow-none">
           {/* Brand */}
           <div className="mb-6 flex flex-col items-center text-center">
             <div className="mb-5 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-cta shadow-lift">
