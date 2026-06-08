@@ -155,10 +155,10 @@ function LoginPage() {
             </form>
           </Tabs>
 
+          <p className="mt-6 text-center text-xs text-muted-foreground">{t("auth.terms")}</p>
         </div>
-
-        <p className="mt-6 text-center text-xs text-muted-foreground">{t("auth.terms")}</p>
       </div>
+
     </main>
   );
 }
