@@ -157,31 +157,6 @@ function LoginPage() {
             </form>
           </Tabs>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            {mode === "login" ? (
-              <>
-                {t("auth.noAccount") ?? "Don't have an account?"}{" "}
-                <button
-                  type="button"
-                  onClick={() => setMode("signup")}
-                  className="font-semibold text-primary hover:underline"
-                >
-                  {t("auth.signup")}
-                </button>
-              </>
-            ) : (
-              <>
-                {t("auth.haveAccount") ?? "Already have an account?"}{" "}
-                <button
-                  type="button"
-                  onClick={() => setMode("login")}
-                  className="font-semibold text-primary hover:underline"
-                >
-                  {t("auth.login")}
-                </button>
-              </>
-            )}
-          </p>
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">{t("auth.terms")}</p>
