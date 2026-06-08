@@ -28,10 +28,29 @@ function LoginPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [view, setView] = useState<"auth" | "forgot">("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleForgot = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success(t("auth.resetEmailSent"));
+      setView("auth");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Use getSession (local, no network) to avoid a race with the post-sign-in
