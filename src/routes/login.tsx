@@ -89,9 +89,7 @@ function LoginPage() {
               {mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {mode === "login"
-                ? "Please log in using the form below."
-                : "Sign up to start planning your trips."}
+              {mode === "login" ? t("auth.loginSubtitle") : t("auth.signupSubtitle")}
             </p>
           </div>
 
