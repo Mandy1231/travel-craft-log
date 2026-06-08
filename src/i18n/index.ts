@@ -39,6 +39,10 @@ const en = {
     loginTitle: "Sign in · Wayfarer",
     loginDesc: "Sign in to Wayfarer to manage your trips.",
     operationFailed: "Operation failed",
+    noAccount: "Don't have an account?",
+    haveAccount: "Already have an account?",
+    loginSubtitle: "Please log in using the form below.",
+    signupSubtitle: "Sign up to start planning your trips.",
   },
   trips: {
     pageTitle: "My trips · Wayfarer",
@@ -176,6 +180,10 @@ const zhCN = {
     loginTitle: "登录 · Wayfarer",
     loginDesc: "登录 Wayfarer,管理你的旅行计划。",
     operationFailed: "操作失败",
+    noAccount: "还没有账号？",
+    haveAccount: "已经有账号？",
+    loginSubtitle: "请使用下方表单登录。",
+    signupSubtitle: "注册开始规划你的行程。",
   },
   trips: {
     pageTitle: "我的旅行计划 · Wayfarer",
@@ -313,6 +321,10 @@ const zhTW = {
     loginTitle: "登入 · Wayfarer",
     loginDesc: "登入 Wayfarer，管理你的旅行計畫。",
     operationFailed: "操作失敗",
+    noAccount: "還沒有帳號？",
+    haveAccount: "已經有帳號？",
+    loginSubtitle: "請使用下方表單登入。",
+    signupSubtitle: "註冊開始規劃你的行程。",
   },
   trips: {
     pageTitle: "我的旅行計畫 · Wayfarer",

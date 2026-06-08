@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -73,39 +73,53 @@ function LoginPage() {
   };
 
   return (
-    <main className="grid min-h-screen place-items-center bg-gradient-sky px-5 py-12">
-      <div className="w-full max-w-md">
-        <div className="mb-6 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-primary">
-            <Compass className="h-5 w-5" />
-            <span className="font-display text-2xl font-semibold">Wayfarer</span>
-          </Link>
-          <LanguageSwitcher />
-        </div>
+    <main className="relative grid min-h-screen place-items-center px-5 py-12">
+      <div className="absolute right-5 top-5 z-10">
+        <LanguageSwitcher />
+      </div>
 
-        <div className="rounded-3xl border border-primary/10 bg-card/90 p-8 shadow-lift backdrop-blur">
+      <div className="w-full max-w-md">
+        <div className="rounded-[2rem] border border-white/60 bg-white/95 p-8 shadow-lift backdrop-blur-xl sm:p-10">
+          {/* Brand */}
+          <div className="mb-6 flex flex-col items-center text-center">
+            <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-cta shadow-lift">
+              <Compass className="h-7 w-7 text-white" />
+            </div>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+              {mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {mode === "login" ? t("auth.loginSubtitle") : t("auth.signupSubtitle")}
+            </p>
+          </div>
+
           <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")}>
-            <TabsList className="mb-6 grid w-full grid-cols-2">
-              <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
-              <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>
+            <TabsList className="mb-6 grid w-full grid-cols-2 rounded-full bg-muted/70 p-1">
+              <TabsTrigger value="login" className="rounded-full">{t("auth.login")}</TabsTrigger>
+              <TabsTrigger value="signup" className="rounded-full">{t("auth.signup")}</TabsTrigger>
             </TabsList>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <TabsContent value="signup" className="m-0 space-y-4">
-                <div>
-                  <Label htmlFor="name">{t("auth.displayName")}</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="name" className="text-xs font-semibold text-muted-foreground">
+                    {t("auth.displayName")}
+                  </Label>
                   <Input
                     id="name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder={t("auth.travelerPlaceholder")}
                     autoComplete="name"
+                    className="h-12 rounded-xl border-border bg-muted/30"
                   />
                 </div>
               </TabsContent>
 
-              <div>
-                <Label htmlFor="email">{t("auth.email")}</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground">
+                  {t("auth.email")}
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -114,10 +128,13 @@ function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   autoComplete="email"
+                  className="h-12 rounded-xl border-border bg-muted/30"
                 />
               </div>
-              <div>
-                <Label htmlFor="password">{t("auth.password")}</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-xs font-semibold text-muted-foreground">
+                  {t("auth.password")}
+                </Label>
                 <Input
                   id="password"
                   type="password"
@@ -127,15 +144,46 @@ function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t("auth.minChars")}
                   autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  className="h-12 rounded-xl border-border bg-muted/30"
                 />
               </div>
 
-              <Button type="submit" className="w-full shadow-lift" disabled={loading}>
+              <Button
+                type="submit"
+                className="h-12 w-full rounded-xl border-0 bg-gradient-cta text-base font-semibold text-white shadow-lift hover:opacity-95"
+                disabled={loading}
+              >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "login" ? t("auth.login") : t("auth.createAccount")}
               </Button>
             </form>
           </Tabs>
+
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            {mode === "login" ? (
+              <>
+                {t("auth.noAccount") ?? "Don't have an account?"}{" "}
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className="font-semibold text-primary hover:underline"
+                >
+                  {t("auth.signup")}
+                </button>
+              </>
+            ) : (
+              <>
+                {t("auth.haveAccount") ?? "Already have an account?"}{" "}
+                <button
+                  type="button"
+                  onClick={() => setMode("login")}
+                  className="font-semibold text-primary hover:underline"
+                >
+                  {t("auth.login")}
+                </button>
+              </>
+            )}
+          </p>
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">{t("auth.terms")}</p>

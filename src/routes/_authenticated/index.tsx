@@ -93,46 +93,53 @@ function Index() {
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-5 pb-24 pt-12 sm:px-8 sm:pt-16">
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-card/80 px-3 py-1 text-xs font-medium text-primary shadow-soft backdrop-blur">
+    <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
+      {/* Hero banner — gradient card with CTA, inspired by the reference */}
+      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-banner p-6 text-white shadow-lift sm:p-8">
+        <div className="relative z-10 max-w-md">
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
             <Compass className="h-3.5 w-3.5" />
             {t("trips.heroTagline")}
           </div>
-          <h1 className="bg-gradient-hero bg-clip-text text-5xl font-semibold tracking-tight text-transparent sm:text-6xl">
+          <h1 className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
             {t("trips.heroTitle")}
           </h1>
-          <p className="mt-3 max-w-lg text-base text-muted-foreground">
+          <p className="mt-2 text-sm text-white/85 sm:text-base">
             {t("trips.heroSub")}
           </p>
+          <Button
+            size="lg"
+            onClick={() => setCreateOpen(true)}
+            className="mt-5 h-11 rounded-full bg-white px-5 font-semibold text-primary shadow-soft hover:bg-white/95"
+          >
+            <Plus className="mr-1.5 h-4 w-4" />
+            {t("trips.create")}
+          </Button>
         </div>
+        <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-12 right-12 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+      </section>
 
-        <Button size="lg" onClick={() => setCreateOpen(true)} className="shadow-lift">
-          <Plus className="mr-1.5 h-4 w-4" />
-          {t("trips.create")}
-        </Button>
-      </header>
-
-      <div className="mb-8 flex flex-col gap-3 rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur sm:flex-row sm:items-center">
+      {/* Search + filter pills */}
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={t("trips.searchPlaceholder")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="border-0 bg-transparent pl-9 shadow-none focus-visible:ring-0"
+            className="h-12 rounded-full border-border bg-card pl-10 shadow-soft focus-visible:ring-primary/30"
           />
         </div>
-        <div className="flex flex-wrap gap-1 rounded-xl bg-muted/60 p-1">
+        <div className="flex flex-wrap gap-1.5">
           {FILTERS.map((f) => (
             <button
               key={f.value}
               onClick={() => setFilter(f.value)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
                 filter === f.value
-                  ? "bg-card text-primary shadow-soft"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-gradient-cta text-white shadow-soft"
+                  : "bg-card text-muted-foreground shadow-soft hover:text-foreground"
               }`}
             >
               {f.label}
@@ -140,6 +147,7 @@ function Index() {
           ))}
         </div>
       </div>
+
 
       {filtered.length === 0 ? (
         <div className="grid place-items-center rounded-3xl border-2 border-dashed border-primary/20 bg-gradient-sky/40 px-6 py-24 text-center">
