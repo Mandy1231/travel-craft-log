@@ -133,12 +133,27 @@ function LoginPage() {
           <div className="w-full max-w-[460px]">
             <div className="rounded-3xl border border-white/60 bg-white/95 p-7 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)] backdrop-blur sm:p-9">
               {/* Brand inside card */}
-              <div className="mb-6 flex items-center justify-center gap-2">
-                <div className="grid h-9 w-9 place-items-center rounded-full ring-2 ring-[#2563EB]">
-                  <Compass className="h-5 w-5 text-[#2563EB]" strokeWidth={2.25} />
-                </div>
-                <span className="text-xl font-bold tracking-tight text-[#0F172A]">Wayfarer</span>
+              <div className="mb-6 flex items-center justify-center gap-2.5">
+                <svg viewBox="0 0 40 40" className="h-8 w-8" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="wf-g" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" />
+                      <stop offset="100%" stopColor="#1D4ED8" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="20" cy="20" r="18" fill="url(#wf-g)" />
+                  <circle cx="20" cy="20" r="13" fill="none" stroke="white" strokeOpacity="0.35" strokeWidth="1" />
+                  <path d="M20 9 L24 20 L20 31 L16 20 Z" fill="white" />
+                  <circle cx="20" cy="20" r="1.6" fill="#1D4ED8" />
+                </svg>
+                <span
+                  className="text-[22px] font-bold tracking-tight text-[#0F172A]"
+                  style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", letterSpacing: "-0.02em" }}
+                >
+                  Wayfarer
+                </span>
               </div>
+
 
               <div className="mb-6 text-center">
                 <h1 className="font-sans text-xl font-semibold tracking-tight text-[#0F172A] sm:text-2xl" style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
