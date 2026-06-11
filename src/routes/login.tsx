@@ -141,7 +141,7 @@ function LoginPage() {
               </div>
 
               <div className="mb-6 text-center">
-                <h1 className="font-sans text-3xl font-bold tracking-tight text-[#0F172A]" style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
+                <h1 className="font-sans text-xl font-semibold tracking-tight text-[#0F172A] sm:text-2xl" style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
                   {view === "forgot"
                     ? t("auth.forgotTitle")
                     : mode === "login"
