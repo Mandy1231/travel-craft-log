@@ -282,26 +282,14 @@ function BrandMark() {
   );
 }
 
-
-function BrandMark({ color }: { color: string }) {
-  return (
-    <svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden="true">
-      <path
-        fill={color}
-        d="M16 2c2.6 0 4.8 1.6 6 4l6.2 13.4c1.6 3.5-1 7.6-4.8 7.6-2 0-3.8-1-4.9-2.7L16 19.4l-2.5 4.9C12.4 26 10.6 27 8.6 27 4.8 27 2.2 22.9 3.8 19.4L10 6c1.2-2.4 3.4-4 6-4Z"
-      />
-    </svg>
-  );
-}
-
 function FieldEmail({ value, onChange, t }: { value: string; onChange: (v: string) => void; t: (k: string) => string }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor="email" className="text-[13px] font-medium text-[#222222]">
+      <Label htmlFor="email" className="text-sm font-medium text-[#1E293B]">
         {t("auth.email")}
       </Label>
       <div className="relative">
-        <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#717171]" />
+        <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
         <Input
           id="email"
           type="email"
@@ -310,7 +298,7 @@ function FieldEmail({ value, onChange, t }: { value: string; onChange: (v: strin
           onChange={(e) => onChange(e.target.value)}
           placeholder="you@example.com"
           autoComplete="email"
-          className="h-12 rounded-lg border-[#B0B0B0] bg-white pl-10 text-base focus-visible:ring-2 focus-visible:ring-[#222222]/15 focus-visible:border-[#222222]"
+          className="h-12 rounded-xl border-[#E2E8F0] bg-white pl-10 text-base focus-visible:ring-2 focus-visible:ring-[#2563EB]/30 focus-visible:border-[#2563EB]"
         />
       </div>
     </div>
@@ -321,7 +309,7 @@ function PrimaryButton({ loading, children }: { loading: boolean; children: Reac
   return (
     <Button
       type="submit"
-      className="h-12 w-full rounded-lg bg-gradient-to-r from-[#FF385C] to-[#E11D48] text-base font-semibold text-white shadow-sm hover:opacity-95 focus-visible:ring-2 focus-visible:ring-[#FF385C]/40 focus-visible:ring-offset-2"
+      className="h-12 w-full rounded-xl bg-[#2563EB] text-base font-semibold text-white shadow-md shadow-[#2563EB]/25 hover:bg-[#1D4ED8] focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2"
       disabled={loading}
     >
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
