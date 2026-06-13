@@ -87,83 +87,64 @@ function LoginPage() {
     }
   };
 
+  const BRAND = "#FF385C"; // Airbnb-inspired coral
+  const BRAND_DARK = "#E11D48";
+
   return (
     <main
-      className="relative min-h-dvh font-sans text-[#1E293B] overflow-hidden"
+      className="relative min-h-dvh bg-white text-[#222222]"
       style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
     >
-      {/* Background: soft blue sky + mountain silhouettes (full page on mobile, left panel on desktop) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#EFF6FF] via-[#DBEAFE] to-[#BFDBFE]" />
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="xMidYMax slice"
-        className="absolute inset-x-0 bottom-0 h-[55%] w-full text-[#2563EB]/20"
-      >
-        <path fill="currentColor" fillOpacity="0.35" d="M0 620 L160 460 L300 540 L460 380 L620 520 L780 420 L940 540 L1120 440 L1280 520 L1440 460 L1440 900 L0 900 Z" />
-        <path fill="currentColor" fillOpacity="0.55" d="M0 720 L140 600 L280 660 L440 540 L600 640 L760 580 L920 660 L1100 580 L1260 660 L1440 600 L1440 900 L0 900 Z" />
-        <path fill="currentColor" fillOpacity="0.85" d="M0 800 L180 720 L360 770 L540 700 L720 760 L900 710 L1080 770 L1260 720 L1440 780 L1440 900 L0 900 Z" />
-      </svg>
+      <div className="grid min-h-dvh lg:grid-cols-2">
+        {/* Left: hero photo (desktop only) — Airbnb-style edge-to-edge imagery */}
+        <aside className="relative hidden lg:block">
+          <img
+            src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80"
+            alt="Traveler overlooking a mountain landscape"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/20 to-transparent" />
 
-      <div className="relative grid min-h-dvh lg:grid-cols-5">
-        {/* Left promo (desktop only) */}
-        <aside className="relative hidden lg:col-span-2 lg:flex lg:flex-col lg:justify-center px-12">
-          <div className="max-w-sm">
-            <div className="mb-6 grid h-12 w-12 place-items-center rounded-xl bg-white/70 ring-1 ring-[#2563EB]/20 backdrop-blur">
-              <Compass className="h-6 w-6 text-[#2563EB]" strokeWidth={2.25} />
-            </div>
-            <h2 className="text-3xl font-bold leading-tight tracking-tight text-[#0F172A]">
-              Plan smarter.<br />Travel better.
-            </h2>
-            <p className="mt-4 text-sm text-[#64748B]">
-              Your journey begins<br />with a single plan.
-            </p>
+          {/* Top brand */}
+          <div className="absolute left-10 top-8 flex items-center gap-2">
+            <BrandMark color={BRAND} />
+            <span className="text-[20px] font-semibold tracking-tight text-white" style={{ letterSpacing: "-0.02em" }}>
+              Wayfarer
+            </span>
           </div>
 
-          <div className="absolute bottom-12 left-12 flex items-center gap-5 text-[#2563EB]/70">
-            <MapPin className="h-5 w-5" />
-            <Briefcase className="h-5 w-5" />
-            <Camera className="h-5 w-5" />
-            <Compass className="h-5 w-5" />
+          {/* Bottom copy */}
+          <div className="absolute inset-x-10 bottom-10 max-w-md text-white">
+            <h2 className="text-[34px] font-semibold leading-[1.1] tracking-tight">
+              Belong anywhere.<br />Plan everywhere.
+            </h2>
+            <p className="mt-3 text-[15px] text-white/85">
+              Discover trips, save places, and travel with the people you love.
+            </p>
           </div>
         </aside>
 
-        {/* Right form */}
-        <section className="flex items-center justify-center px-5 py-10 sm:px-8 lg:col-span-3 lg:px-12">
-          <div className="w-full max-w-[460px]">
-            <div className="rounded-3xl border border-white/60 bg-white/95 p-7 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)] backdrop-blur sm:p-9">
-              {/* Brand inside card */}
-              <div className="mb-6 flex items-center justify-center gap-2.5">
-                <svg viewBox="0 0 40 40" className="h-8 w-8" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="wf-g" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" />
-                      <stop offset="100%" stopColor="#1D4ED8" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="20" cy="20" r="18" fill="url(#wf-g)" />
-                  <circle cx="20" cy="20" r="13" fill="none" stroke="white" strokeOpacity="0.35" strokeWidth="1" />
-                  <path d="M20 9 L24 20 L20 31 L16 20 Z" fill="white" />
-                  <circle cx="20" cy="20" r="1.6" fill="#1D4ED8" />
-                </svg>
-                <span
-                  className="text-[22px] font-bold tracking-tight text-[#0F172A]"
-                  style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", letterSpacing: "-0.02em" }}
-                >
-                  Wayfarer
-                </span>
-              </div>
+        {/* Right: form */}
+        <section className="flex items-center justify-center px-5 py-8 sm:px-8">
+          <div className="w-full max-w-[420px]">
+            {/* Mobile brand */}
+            <div className="mb-6 flex items-center justify-center gap-2 lg:hidden">
+              <BrandMark color={BRAND} />
+              <span className="text-[20px] font-semibold tracking-tight text-[#222222]" style={{ letterSpacing: "-0.02em" }}>
+                Wayfarer
+              </span>
+            </div>
 
-
-              <div className="mb-6 text-center">
-                <h1 className="font-sans text-xl font-semibold tracking-tight text-[#0F172A] sm:text-2xl" style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
+            <div className="rounded-2xl border border-[#EBEBEB] bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.04)] sm:p-8">
+              <div className="mb-5 border-b border-[#EBEBEB] pb-4">
+                <h1 className="text-[22px] font-semibold tracking-tight text-[#222222]">
                   {view === "forgot"
                     ? t("auth.forgotTitle")
                     : mode === "login"
                       ? t("auth.welcomeBack")
                       : t("auth.createAccount")}
                 </h1>
-                <p className="mt-2 text-sm text-[#64748B]">
+                <p className="mt-1 text-[14px] text-[#717171]">
                   {view === "forgot" ? t("auth.forgotDesc") : t("auth.taglineSub")}
                 </p>
               </div>
@@ -175,23 +156,23 @@ function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setView("auth")}
-                    className="block w-full text-center text-sm font-medium text-[#2563EB] hover:underline"
+                    className="block w-full text-center text-sm font-semibold text-[#222222] underline underline-offset-4"
                   >
                     {t("auth.backToLogin")}
                   </button>
                 </form>
               ) : (
                 <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")}>
-                  <TabsList className="mb-6 grid w-full grid-cols-2 rounded-none border-b border-[#E2E8F0] bg-transparent p-0 h-auto">
+                  <TabsList className="mb-5 grid w-full grid-cols-2 rounded-none border-b border-[#EBEBEB] bg-transparent p-0 h-auto">
                     <TabsTrigger
                       value="login"
-                      className="rounded-none border-b-2 border-transparent bg-transparent pb-2.5 pt-1 text-sm font-medium text-[#64748B] shadow-none data-[state=active]:border-[#2563EB] data-[state=active]:bg-transparent data-[state=active]:text-[#0F172A] data-[state=active]:shadow-none"
+                      className="rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-1 text-sm font-semibold text-[#717171] shadow-none data-[state=active]:border-[#222222] data-[state=active]:bg-transparent data-[state=active]:text-[#222222] data-[state=active]:shadow-none"
                     >
                       {t("auth.login")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="signup"
-                      className="rounded-none border-b-2 border-transparent bg-transparent pb-2.5 pt-1 text-sm font-medium text-[#64748B] shadow-none data-[state=active]:border-[#2563EB] data-[state=active]:bg-transparent data-[state=active]:text-[#0F172A] data-[state=active]:shadow-none"
+                      className="rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-1 text-sm font-semibold text-[#717171] shadow-none data-[state=active]:border-[#222222] data-[state=active]:bg-transparent data-[state=active]:text-[#222222] data-[state=active]:shadow-none"
                     >
                       {t("auth.signup")}
                     </TabsTrigger>
@@ -200,7 +181,7 @@ function LoginPage() {
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <TabsContent value="signup" className="m-0 space-y-4">
                       <div className="space-y-1.5">
-                        <Label htmlFor="name" className="text-sm font-medium text-[#1E293B]">
+                        <Label htmlFor="name" className="text-[13px] font-medium text-[#222222]">
                           {t("auth.displayName")}
                         </Label>
                         <Input
@@ -209,7 +190,7 @@ function LoginPage() {
                           onChange={(e) => setDisplayName(e.target.value)}
                           placeholder={t("auth.travelerPlaceholder")}
                           autoComplete="name"
-                          className="h-12 rounded-xl border-[#E2E8F0] bg-white text-base focus-visible:ring-2 focus-visible:ring-[#2563EB]/30 focus-visible:border-[#2563EB]"
+                          className="h-12 rounded-lg border-[#B0B0B0] bg-white text-base focus-visible:ring-2 focus-visible:ring-[#222222]/15 focus-visible:border-[#222222]"
                         />
                       </div>
                     </TabsContent>
@@ -218,21 +199,21 @@ function LoginPage() {
 
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="password" className="text-sm font-medium text-[#1E293B]">
+                        <Label htmlFor="password" className="text-[13px] font-medium text-[#222222]">
                           {t("auth.password")}
                         </Label>
                         {mode === "login" && (
                           <button
                             type="button"
                             onClick={() => setView("forgot")}
-                            className="text-sm font-medium text-[#2563EB] hover:underline"
+                            className="text-[13px] font-semibold text-[#222222] underline underline-offset-4"
                           >
                             {t("auth.forgotPassword")}
                           </button>
                         )}
                       </div>
                       <div className="relative">
-                        <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
+                        <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#717171]" />
                         <Input
                           id="password"
                           type={showPw ? "text" : "password"}
@@ -242,7 +223,7 @@ function LoginPage() {
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder={t("auth.minChars")}
                           autoComplete={mode === "login" ? "current-password" : "new-password"}
-                          className="h-12 rounded-xl border-[#E2E8F0] bg-white pl-10 pr-11 text-base focus-visible:ring-2 focus-visible:ring-[#2563EB]/30 focus-visible:border-[#2563EB]"
+                          className="h-12 rounded-lg border-[#B0B0B0] bg-white pl-10 pr-11 text-base focus-visible:ring-2 focus-visible:ring-[#222222]/15 focus-visible:border-[#222222]"
                         />
                         <button
                           type="button"
@@ -262,7 +243,7 @@ function LoginPage() {
                 </Tabs>
               )}
 
-              <p className="mt-6 text-center text-xs leading-relaxed text-[#94A3B8]">{t("auth.terms")}</p>
+              <p className="mt-5 text-center text-[12px] leading-relaxed text-[#717171]">{t("auth.terms")}</p>
             </div>
           </div>
         </section>
@@ -271,14 +252,25 @@ function LoginPage() {
   );
 }
 
+function BrandMark({ color }: { color: string }) {
+  return (
+    <svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden="true">
+      <path
+        fill={color}
+        d="M16 2c2.6 0 4.8 1.6 6 4l6.2 13.4c1.6 3.5-1 7.6-4.8 7.6-2 0-3.8-1-4.9-2.7L16 19.4l-2.5 4.9C12.4 26 10.6 27 8.6 27 4.8 27 2.2 22.9 3.8 19.4L10 6c1.2-2.4 3.4-4 6-4Z"
+      />
+    </svg>
+  );
+}
+
 function FieldEmail({ value, onChange, t }: { value: string; onChange: (v: string) => void; t: (k: string) => string }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor="email" className="text-sm font-medium text-[#1E293B]">
+      <Label htmlFor="email" className="text-[13px] font-medium text-[#222222]">
         {t("auth.email")}
       </Label>
       <div className="relative">
-        <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
+        <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#717171]" />
         <Input
           id="email"
           type="email"
@@ -287,7 +279,7 @@ function FieldEmail({ value, onChange, t }: { value: string; onChange: (v: strin
           onChange={(e) => onChange(e.target.value)}
           placeholder="you@example.com"
           autoComplete="email"
-          className="h-12 rounded-xl border-[#E2E8F0] bg-white pl-10 text-base focus-visible:ring-2 focus-visible:ring-[#2563EB]/30 focus-visible:border-[#2563EB]"
+          className="h-12 rounded-lg border-[#B0B0B0] bg-white pl-10 text-base focus-visible:ring-2 focus-visible:ring-[#222222]/15 focus-visible:border-[#222222]"
         />
       </div>
     </div>
@@ -298,7 +290,7 @@ function PrimaryButton({ loading, children }: { loading: boolean; children: Reac
   return (
     <Button
       type="submit"
-      className="h-12 w-full rounded-xl bg-[#2563EB] text-base font-semibold text-white shadow-md shadow-[#2563EB]/25 hover:bg-[#1D4ED8] focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2"
+      className="h-12 w-full rounded-lg bg-gradient-to-r from-[#FF385C] to-[#E11D48] text-base font-semibold text-white shadow-sm hover:opacity-95 focus-visible:ring-2 focus-visible:ring-[#FF385C]/40 focus-visible:ring-offset-2"
       disabled={loading}
     >
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
