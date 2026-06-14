@@ -210,16 +210,14 @@ function Index() {
                     >
                       <Copy className="h-3.5 w-3.5" />
                     </Button>
-                    {trip.visibility === "public" && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-muted-foreground hover:text-foreground"
-                        onClick={() => handleShare(trip)}
-                      >
-                        <Share2 className="h-3.5 w-3.5" />
-                      </Button>
-                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => handleShare(trip)}
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="sm"
