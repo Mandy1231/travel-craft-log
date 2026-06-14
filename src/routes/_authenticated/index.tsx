@@ -111,9 +111,9 @@ function Index() {
         <div className="pointer-events-none absolute -bottom-12 right-12 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
       </section>
 
-      {/* Search + filter pills */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
+      {/* Search */}
+      <div className="mb-6">
+        <div className="relative">
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={t("trips.searchPlaceholder")}
@@ -121,21 +121,6 @@ function Index() {
             onChange={(e) => setQ(e.target.value)}
             className="h-12 rounded-full border-border bg-card pl-10 shadow-soft focus-visible:ring-primary/30"
           />
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              onClick={() => setFilter(f.value)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
-                filter === f.value
-                  ? "bg-gradient-cta text-white shadow-soft"
-                  : "bg-card text-muted-foreground shadow-soft hover:text-foreground"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -167,9 +152,6 @@ function Index() {
                       {trip.coverEmoji ?? "✈️"}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="mb-1 flex items-center gap-2">
-                        <VisibilityBadge visibility={trip.visibility} />
-                      </div>
                       <h2 className="truncate font-display text-2xl font-semibold text-foreground">
                         📍 {trip.title}
                       </h2>
