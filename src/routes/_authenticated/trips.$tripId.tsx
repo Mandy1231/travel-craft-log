@@ -36,7 +36,6 @@ import { Input } from "@/components/ui/input";
 import { MapPreview } from "@/components/MapPreview";
 import { AddAttractionDialog } from "@/components/AddAttractionDialog";
 import { TripDialog } from "@/components/TripDialog";
-import { VisibilityBadge } from "@/components/VisibilityBadge";
 import { useTrip, tripsApi, type Attraction, type Day, type Trip } from "@/lib/trips-store";
 import { optimizeDayOrder } from "@/lib/route-optimize";
 import { toast } from "sonner";
@@ -237,7 +236,7 @@ function TripDetail() {
   }
 
   const handleShare = async () => {
-    const url = window.location.href;
+    const url = `${window.location.origin}/s/${trip.id}`;
     try {
       await navigator.clipboard.writeText(url);
       toast.success(t("trips.linkCopied"));
@@ -296,20 +295,9 @@ function TripDetail() {
         </button>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleShare}>
+          <Button variant="default" size="sm" onClick={handleShare}>
             <Share2 className="mr-1.5 h-4 w-4" />
             {t("common.share")}
-          </Button>
-          <Button
-            variant={trip.visibility === "public" ? "default" : "outline"}
-            size="sm"
-            onClick={() => {
-              const next = trip.visibility === "public" ? "private" : "public";
-              tripsApi.update(trip.id, { visibility: next });
-              toast.success(next === "public" ? t("trips.setPublicToast") : t("trips.setPrivateToast"));
-            }}
-          >
-            👥 {trip.visibility === "public" ? t("trips.public") : t("trips.setPublic")}
           </Button>
           <Button
             variant="outline"
@@ -334,9 +322,6 @@ function TripDetail() {
           {trip.coverEmoji}
         </div>
         <div className="min-w-0 flex-1 pt-1">
-          <div className="mb-2">
-            <VisibilityBadge visibility={trip.visibility} />
-          </div>
           <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             {trip.title}
           </h1>
