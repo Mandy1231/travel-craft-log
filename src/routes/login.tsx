@@ -260,24 +260,24 @@ function LoginPage() {
 }
 
 /**
- * Logo inspired by real travel brands (Airbnb Bélo + Booking/Trip.com pin):
- * a soft rounded "location pin / journey loop" mark in coral, the universal
- * travel accent color, paired with a tight Inter wordmark.
+ * Simple circle + leaf mark — clean, minimal, inspired by
+ * modern travel brand logos (Trip.com, Booking style).
  */
 function BrandMark() {
   return (
     <svg viewBox="0 0 32 32" className="h-8 w-8" aria-hidden="true">
-      <defs>
-        <linearGradient id="wf-brand" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#FF5A5F" />
-          <stop offset="100%" stopColor="#E11D48" />
-        </linearGradient>
-      </defs>
-      <path
-        fill="url(#wf-brand)"
-        d="M16 2c2.6 0 4.8 1.5 6 3.9l6.1 12.6c1.7 3.5-.9 7.5-4.7 7.5-2 0-3.8-1.1-4.8-2.8L16 19l-2.6 4.2c-1 1.7-2.8 2.8-4.8 2.8-3.8 0-6.4-4-4.7-7.5L10 5.9C11.2 3.5 13.4 2 16 2Z"
+      <circle
+        cx="16"
+        cy="16"
+        r="14"
+        fill="none"
+        stroke="#2563EB"
+        strokeWidth="2.5"
       />
-      <circle cx="16" cy="12" r="3" fill="white" />
+      <path
+        fill="#2563EB"
+        d="M20.5 11.5c-1.5 0-3.2 1.6-4.5 3.2-1.3-1.6-3-3.2-4.5-3.2-1.2 0-2.2.8-2.2 2.5 0 2.8 3.5 5.8 6.7 8.2 3.2-2.4 6.7-5.4 6.7-8.2 0-1.7-1-2.5-2.2-2.5Z"
+      />
     </svg>
   );
 }
