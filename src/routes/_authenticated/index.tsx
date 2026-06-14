@@ -16,9 +16,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTrips, tripsApi, type Trip, type Visibility } from "@/lib/trips-store";
+import { useTrips, tripsApi, type Trip } from "@/lib/trips-store";
 import { TripDialog } from "@/components/TripDialog";
-import { VisibilityBadge } from "@/components/VisibilityBadge";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -53,22 +52,14 @@ function dayCount(t: Trip) {
 
 function Index() {
   const { t } = useTranslation();
-  const FILTERS: { value: Visibility | "all"; label: string }[] = [
-    { value: "all", label: t("trips.filterAll") },
-    { value: "private", label: t("trips.filterPrivate") },
-    { value: "public", label: t("trips.filterPublic") },
-    { value: "draft", label: t("trips.filterDraft") },
-  ];
   const trips = useTrips();
   const [createOpen, setCreateOpen] = useState(false);
   const [editTrip, setEditTrip] = useState<Trip | null>(null);
   const [deleteTrip, setDeleteTrip] = useState<Trip | null>(null);
   const [q, setQ] = useState("");
-  const [filter, setFilter] = useState<Visibility | "all">("all");
 
   const filtered = useMemo(() => {
     return trips.filter((t) => {
-      if (filter !== "all" && t.visibility !== filter) return false;
       if (q.trim()) {
         const needle = q.trim().toLowerCase();
         const hay = [
@@ -82,10 +73,10 @@ function Index() {
       }
       return true;
     });
-  }, [trips, q, filter]);
+  }, [trips, q]);
 
   const handleShare = (trip: Trip) => {
-    const url = `${window.location.origin}/trips/${trip.id}`;
+    const url = `${window.location.origin}/s/${trip.id}`;
     navigator.clipboard.writeText(url).then(
       () => toast.success(t("trips.linkCopied")),
       () => toast.error(t("trips.copyFailed")),
