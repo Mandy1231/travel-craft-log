@@ -129,7 +129,7 @@ function Index() {
       </section>
 
       {/* Search */}
-      <div className="mb-6">
+      <div className="mb-8">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -141,6 +141,7 @@ function Index() {
         </div>
       </div>
 
+      <h2 className="mb-4 text-lg font-semibold text-slate-900">{t("trips.myPlans")}</h2>
 
       {filtered.length === 0 ? (
         <div className="grid place-items-center rounded-3xl border-2 border-dashed border-primary/20 bg-gradient-sky/40 px-6 py-24 text-center">
@@ -159,90 +160,96 @@ function Index() {
             const spotCount = trip.days.reduce((s, d) => s + d.attractions.length, 0);
             return (
               <li key={trip.id}>
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary/10 bg-card/90 shadow-soft backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lift">
+                <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lift">
                   <Link
                     to="/trips/$tripId"
                     params={{ tripId: trip.id }}
-                    className="flex items-start gap-4 p-5 pb-3"
+                    className="grid grid-cols-[88px_minmax(0,1fr)_auto] items-start gap-4 p-4"
                   >
-                    <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-hero text-3xl shadow-glow">
+                    <div className="grid h-22 w-22 aspect-square shrink-0 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-[#DCE7F7] to-[#B8CBE6] text-4xl">
                       {trip.coverEmoji ?? "✈️"}
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <h2 className="truncate font-display text-2xl font-semibold text-foreground">
-                        📍 {trip.title}
-                      </h2>
-                      <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                    <div className="min-w-0 flex-1 pt-1">
+                      <h3 className="truncate text-lg font-bold text-slate-900">
+                        {trip.title}
+                      </h3>
+                      <div className="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
                         {range ? (
                           <>
                             <Calendar className="h-3.5 w-3.5" />
                             <span>{range}</span>
                           </>
                         ) : (
-                          <span className="italic">{t("trips.planning")}</span>
+                          <>
+                            <Calendar className="h-3.5 w-3.5" />
+                            <span className="italic">{t("trips.planning")}</span>
+                          </>
                         )}
                       </div>
-                      {(range || spotCount > 0) && (
-                        <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
-                          {range && <span>{dayCount(trip)} {t("trips.daysSuffix")}</span>}
-                          {range && spotCount > 0 && <span>·</span>}
-                          {spotCount > 0 && (
-                            <span className="inline-flex items-center gap-1">
-                              <MapPin className="h-3 w-3" />
-                              {spotCount} {t("trips.spotsSuffix")}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                      <div className="mt-1.5 flex items-center gap-2 text-sm text-slate-500">
+                        {range && <span>{dayCount(trip)} {t("trips.daysSuffix")}</span>}
+                        {range && spotCount > 0 && <span>·</span>}
+                        {spotCount > 0 && (
+                          <span className="inline-flex items-center gap-1">
+                            <MapPin className="h-3.5 w-3.5" />
+                            {spotCount} {t("trips.spotsSuffix")}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </Link>
-
-                  <div className="flex items-center gap-0.5 border-t border-primary/5 bg-muted/30 px-2 py-1.5">
-                    <Link to="/trips/$tripId" params={{ tripId: trip.id }} className="flex-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full text-primary hover:bg-primary/10 hover:text-primary"
-                      >
-                        <Eye className="mr-1 h-3.5 w-3.5" />
-                        {t("common.view")}
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground hover:text-foreground"
-                      onClick={() => setEditTrip(trip)}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground hover:text-foreground"
-                      onClick={() => {
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         tripsApi.duplicate(trip.id);
                         toast.success(t("trips.duplicated"));
                       }}
+                      className="-mt-1 rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                      aria-label="More"
                     >
-                      <Copy className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground hover:text-foreground"
-                      onClick={() => handleShare(trip)}
+                      <Copy className="h-4 w-4" />
+                    </button>
+                  </Link>
+
+                  <div className="flex items-center justify-between border-t border-slate-100 px-4 py-2">
+                    <Link
+                      to="/trips/$tripId"
+                      params={{ tripId: trip.id }}
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
                     >
-                      <Share2 className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground hover:text-destructive"
-                      onClick={() => setDeleteTrip(trip)}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                      <Eye className="h-4 w-4" />
+                      {t("common.view")}
+                    </Link>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                        onClick={() => handleShare(trip)}
+                        aria-label="Share"
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                        onClick={() => setEditTrip(trip)}
+                        aria-label="Edit"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-slate-400 hover:bg-red-50 hover:text-destructive"
+                        onClick={() => setDeleteTrip(trip)}
+                        aria-label="Delete"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </article>
               </li>
