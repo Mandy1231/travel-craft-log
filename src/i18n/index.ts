@@ -472,6 +472,12 @@ const zhTW = {
     routeSummary: "{{km}} 公里 · {{min}} 分鐘",
     routeOrder: "最佳路線：{{sequence}}",
   },
+  profile: {
+    manageInfo: "管理你的個人資訊。",
+    accountInfo: "帳號資訊",
+    accountDesc: "更新你的顯示名稱並查看帳號詳情。",
+    joined: "註冊於",
+  },
   tripDialog: {
     editTitle: "編輯行程",
     createTitle: "建立新計畫",
