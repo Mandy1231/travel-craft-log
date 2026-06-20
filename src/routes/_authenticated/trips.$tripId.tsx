@@ -101,7 +101,7 @@ function DayCard({
 
   return (
     <li
-      className={`overflow-hidden rounded-2xl border bg-background/70 transition-shadow ${
+      className={`overflow-hidden rounded-2xl border border-slate-200/70 bg-white transition-shadow ${
         isSelected ? "ring-2 ring-offset-2 ring-offset-background shadow-lift" : ""
       }`}
       style={{
@@ -111,7 +111,7 @@ function DayCard({
           : {}),
       }}
     >
-      <div className="flex items-center justify-between gap-2 bg-gradient-sky/50 px-4 py-2.5">
+      <div className="flex items-center justify-between gap-2 bg-slate-50 px-4 py-2.5">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <button
             type="button"
