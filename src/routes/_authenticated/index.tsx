@@ -268,6 +268,11 @@ function Index() {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
+      </AlertDialog>
+    </main>
+  );
+}
+
 function BrandMark() {
   return (
     <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
