@@ -352,9 +352,9 @@ function TripDetail() {
           />
         </section>
 
-        <section className="rounded-3xl border border-primary/10 bg-card/80 p-4 shadow-soft backdrop-blur sm:p-5">
+        <section className="rounded-3xl border border-slate-200/70 bg-white p-4 shadow-soft sm:p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-2xl">{t("trips.schedule")}</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-slate-900">{t("trips.schedule")}</h2>
             <Button size="sm" onClick={() => tripsApi.addDay(trip.id)} className="shadow-soft">
               <Plus className="mr-1 h-4 w-4" />
               {t("trips.addDay")}
