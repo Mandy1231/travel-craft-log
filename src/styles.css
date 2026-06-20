@@ -58,7 +58,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.03 250);
 
-  --primary: oklch(0.62 0.19 256);          /* #3B82F6 */
+  --primary: oklch(0.58 0.24 255);          /* vibrant bright blue */
   --primary-foreground: oklch(0.99 0.005 250);
 
   --secondary: oklch(0.965 0.008 250);
