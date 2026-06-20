@@ -154,7 +154,7 @@ function Index() {
           </p>
         </div>
       ) : (
-        <ul className="grid gap-5 sm:grid-cols-2">
+        <ul className="grid gap-4 md:grid-cols-2 md:gap-5">
           {filtered.map((trip) => {
             const range = formatRange(trip);
             const spotCount = trip.days.reduce((s, d) => s + d.attractions.length, 0);
@@ -164,13 +164,13 @@ function Index() {
                   <Link
                     to="/trips/$tripId"
                     params={{ tripId: trip.id }}
-                    className="grid grid-cols-[88px_minmax(0,1fr)_auto] items-start gap-4 p-4"
+                    className="grid grid-cols-[72px_minmax(0,1fr)_auto] items-start gap-3 p-3 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                   >
-                    <div className="grid h-22 w-22 aspect-square shrink-0 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-[#DCE7F7] to-[#B8CBE6] text-4xl">
+                    <div className="grid aspect-square h-[72px] w-[72px] shrink-0 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-[#DCE7F7] to-[#B8CBE6] text-3xl sm:h-[88px] sm:w-[88px] sm:text-4xl">
                       {trip.coverEmoji ?? "✈️"}
                     </div>
-                    <div className="min-w-0 flex-1 pt-1">
-                      <h3 className="truncate text-lg font-bold text-slate-900">
+                    <div className="min-w-0 flex-1 pt-0.5">
+                      <h3 className="truncate text-base font-bold text-slate-900 sm:text-lg">
                         {trip.title}
                       </h3>
                       <div className="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
