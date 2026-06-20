@@ -87,24 +87,12 @@ function Index() {
   return (
     <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
       {/* Hero banner — clean, elegant, minimalist */}
-      <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-b from-[#EFF6FF] via-[#DBEAFE] to-[#BFDBFE] p-8 sm:p-14">
-        {/* Mountain silhouettes — matches login page */}
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 1440 900"
-          preserveAspectRatio="xMidYMax slice"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] w-full text-[#2563EB]/20"
-        >
-          <path fill="currentColor" fillOpacity="0.35" d="M0 620 L160 460 L300 540 L460 380 L620 520 L780 420 L940 540 L1120 440 L1280 520 L1440 460 L1440 900 L0 900 Z" />
-          <path fill="currentColor" fillOpacity="0.55" d="M0 720 L140 600 L280 660 L440 540 L600 640 L760 580 L920 660 L1100 580 L1260 660 L1440 600 L1440 900 L0 900 Z" />
-          <path fill="currentColor" fillOpacity="0.85" d="M0 800 L180 720 L360 770 L540 700 L720 760 L900 710 L1080 770 L1260 720 L1440 780 L1440 900 L0 900 Z" />
-        </svg>
-
+      <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 via-white to-slate-100 p-8 sm:p-14">
         <div className="relative z-10 max-w-2xl">
           <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-6xl">
             {t("trips.heroTitle")}
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-slate-500 sm:text-lg">
             {t("trips.heroSub")}
           </p>
           <Button
@@ -116,6 +104,16 @@ function Index() {
             {t("trips.create")}
           </Button>
         </div>
+
+        {/* Subtle decorative circle */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-slate-200/40 to-slate-300/20 sm:-right-10 sm:-top-10 sm:h-80 sm:w-80"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -right-10 h-48 w-48 rounded-full bg-gradient-to-tr from-slate-100/60 to-slate-200/30 sm:-bottom-16 sm:right-20 sm:h-56 sm:w-56"
+        />
       </section>
 
       {/* Search */}
