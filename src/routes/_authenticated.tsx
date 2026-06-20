@@ -56,11 +56,11 @@ function AuthedLayout() {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b border-primary/10 bg-background/80 backdrop-blur-md">
+      <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
           <Link to="/" className="inline-flex items-center gap-2 text-base font-bold text-slate-900">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#2563EB] text-white shadow-soft">
-              <Heart className="h-4 w-4 fill-white" />
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-primary-foreground shadow-soft">
+              <Heart className="h-4 w-4 fill-current" />
             </span>
             Wayfarer
           </Link>
@@ -69,7 +69,7 @@ function AuthedLayout() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
-                  <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-hero text-xs font-semibold text-white">
+                  <div className="grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                     {email?.[0]?.toUpperCase() ?? "?"}
                   </div>
                   <span className="hidden text-sm sm:inline">{email ?? "..."}</span>

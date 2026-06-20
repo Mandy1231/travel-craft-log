@@ -418,7 +418,7 @@ export function MapPreview({ days, selectedDayId, onClearSelection }: Props) {
 
       {allPoints.length > 1 && (
         <div className="pointer-events-none absolute bottom-3 left-3 right-3 z-10 flex items-center gap-2 rounded-2xl bg-card/95 px-4 py-2.5 shadow-soft backdrop-blur">
-          <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-hero text-primary-foreground">
+          <div className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground">
             {routeStatus === "loading" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (

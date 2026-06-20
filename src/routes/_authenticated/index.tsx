@@ -154,7 +154,7 @@ function Index() {
                     params={{ tripId: trip.id }}
                     className="grid grid-cols-[72px_minmax(0,1fr)_auto] items-start gap-3 p-3 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                   >
-                    <div className="grid aspect-square h-[72px] w-[72px] shrink-0 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-[#DCE7F7] to-[#B8CBE6] text-3xl sm:h-[88px] sm:w-[88px] sm:text-4xl">
+                    <div className="grid aspect-square h-[72px] w-[72px] shrink-0 place-items-center overflow-hidden rounded-xl bg-slate-50 text-3xl ring-1 ring-slate-200/70 sm:h-[88px] sm:w-[88px] sm:text-4xl">
                       {trip.coverEmoji ?? "✈️"}
                     </div>
                     <div className="min-w-0 flex-1 pt-0.5">
@@ -204,7 +204,7 @@ function Index() {
                     <Link
                       to="/trips/$tripId"
                       params={{ tripId: trip.id }}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80"
                     >
                       <Eye className="h-4 w-4" />
                       {t("common.view")}

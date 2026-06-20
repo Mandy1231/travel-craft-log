@@ -101,7 +101,7 @@ function DayCard({
 
   return (
     <li
-      className={`overflow-hidden rounded-2xl border bg-background/70 transition-shadow ${
+      className={`overflow-hidden rounded-2xl border border-slate-200/70 bg-white transition-shadow ${
         isSelected ? "ring-2 ring-offset-2 ring-offset-background shadow-lift" : ""
       }`}
       style={{
@@ -111,7 +111,7 @@ function DayCard({
           : {}),
       }}
     >
-      <div className="flex items-center justify-between gap-2 bg-gradient-sky/50 px-4 py-2.5">
+      <div className="flex items-center justify-between gap-2 bg-slate-50 px-4 py-2.5">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <button
             type="button"
@@ -317,15 +317,15 @@ function TripDetail() {
         </div>
       </div>
 
-      <header className="mb-8 flex items-start gap-5">
-        <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-gradient-hero text-5xl shadow-lift">
+      <header className="mb-10 flex items-start gap-5">
+        <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl border border-slate-200 bg-white text-5xl shadow-soft">
           {trip.coverEmoji}
         </div>
         <div className="min-w-0 flex-1 pt-1">
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
             {trip.title}
           </h1>
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
             {trip.startDate ? (
               <span className="inline-flex items-center gap-1.5">
                 <Calendar className="h-4 w-4" />
@@ -352,9 +352,9 @@ function TripDetail() {
           />
         </section>
 
-        <section className="rounded-3xl border border-primary/10 bg-card/80 p-4 shadow-soft backdrop-blur sm:p-5">
+        <section className="rounded-3xl border border-slate-200/70 bg-white p-4 shadow-soft sm:p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-2xl">{t("trips.schedule")}</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-slate-900">{t("trips.schedule")}</h2>
             <Button size="sm" onClick={() => tripsApi.addDay(trip.id)} className="shadow-soft">
               <Plus className="mr-1 h-4 w-4" />
               {t("trips.addDay")}
