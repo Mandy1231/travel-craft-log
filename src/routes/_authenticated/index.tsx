@@ -15,7 +15,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroSuitcase from "@/assets/hero-suitcase.png";
+
 import { Input } from "@/components/ui/input";
 import { useTrips, tripsApi, type Trip } from "@/lib/trips-store";
 import { TripDialog } from "@/components/TripDialog";
