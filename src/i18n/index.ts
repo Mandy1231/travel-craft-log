@@ -19,6 +19,7 @@ const en = {
     back: "Back",
     profile: "Profile",
     logout: "Sign out",
+    saved: "Saved",
     confirm: "Confirm",
     clear: "Clear",
   },
