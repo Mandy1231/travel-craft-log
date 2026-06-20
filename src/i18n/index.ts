@@ -186,6 +186,7 @@ const zhCN = {
     back: "返回",
     profile: "个人资料",
     logout: "退出登录",
+    saved: "已保存",
     confirm: "确认",
     clear: "清除",
   },
