@@ -317,15 +317,15 @@ function TripDetail() {
         </div>
       </div>
 
-      <header className="mb-8 flex items-start gap-5">
-        <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-gradient-hero text-5xl shadow-lift">
+      <header className="mb-10 flex items-start gap-5">
+        <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl border border-slate-200 bg-white text-5xl shadow-soft">
           {trip.coverEmoji}
         </div>
         <div className="min-w-0 flex-1 pt-1">
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
             {trip.title}
           </h1>
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
             {trip.startDate ? (
               <span className="inline-flex items-center gap-1.5">
                 <Calendar className="h-4 w-4" />
