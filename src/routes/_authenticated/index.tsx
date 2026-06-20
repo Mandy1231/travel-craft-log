@@ -15,6 +15,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import heroSuitcase from "@/assets/hero-suitcase.png";
 import { Input } from "@/components/ui/input";
 import { useTrips, tripsApi, type Trip } from "@/lib/trips-store";
 import { TripDialog } from "@/components/TripDialog";
@@ -85,26 +86,45 @@ function Index() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
-      {/* Hero banner — white with logo */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl bg-white p-6 shadow-soft sm:p-10">
-        <div className="relative z-10 flex flex-col items-center text-center">
-          <div className="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-[#EFF6FF] ring-1 ring-[#2563EB]/20">
-            <BrandMark />
+      {/* Hero banner — soft blue with 3D suitcase illustration */}
+      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-[#EEF3FB] via-[#E4EDFA] to-[#DCE7F7] p-6 shadow-soft sm:p-10">
+        {/* Mountain silhouettes */}
+        <svg
+          aria-hidden
+          viewBox="0 0 800 300"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-full w-full opacity-60"
+          preserveAspectRatio="xMidYMax slice"
+        >
+          <path d="M0,260 L120,180 L220,230 L340,140 L460,220 L600,160 L720,210 L800,180 L800,300 L0,300 Z" fill="#C8D7EC" />
+          <path d="M0,280 L100,220 L240,260 L380,200 L520,250 L660,210 L800,240 L800,300 L0,300 Z" fill="#B8CBE6" opacity="0.7" />
+        </svg>
+
+        <div className="relative z-10 grid items-center gap-6 sm:grid-cols-[1.2fr_1fr]">
+          <div className="max-w-md">
+            <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+              {t("trips.heroTitle")}
+            </h1>
+            <p className="mt-3 text-sm text-slate-600 sm:text-base">
+              {t("trips.heroSub")}
+            </p>
+            <Button
+              size="lg"
+              onClick={() => setCreateOpen(true)}
+              className="mt-6 h-12 rounded-full bg-[#2563EB] px-6 font-semibold text-white shadow-lift hover:bg-[#1D4ED8]"
+            >
+              <Plus className="mr-1.5 h-4 w-4" />
+              {t("trips.create")}
+            </Button>
           </div>
-          <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-            {t("trips.heroTitle")}
-          </h1>
-          <p className="mt-3 text-sm text-slate-600 sm:text-base">
-            {t("trips.heroSub")}
-          </p>
-          <Button
-            size="lg"
-            onClick={() => setCreateOpen(true)}
-            className="mt-6 h-12 rounded-full bg-[#2563EB] px-6 font-semibold text-white shadow-lift hover:bg-[#1D4ED8]"
-          >
-            <Plus className="mr-1.5 h-4 w-4" />
-            {t("trips.create")}
-          </Button>
+          <div className="relative hidden sm:block">
+            <img
+              src={heroSuitcase}
+              alt=""
+              width={512}
+              height={512}
+              className="mx-auto h-56 w-auto object-contain drop-shadow-2xl sm:h-72"
+            />
+          </div>
         </div>
       </section>
 
@@ -270,24 +290,5 @@ function Index() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
-  );
-}
-
-function BrandMark() {
-  return (
-    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
-      <circle
-        cx="16"
-        cy="16"
-        r="14"
-        fill="none"
-        stroke="#2563EB"
-        strokeWidth="2.5"
-      />
-      <path
-        fill="#2563EB"
-        d="M20.5 11.5c-1.5 0-3.2 1.6-4.5 3.2-1.3-1.6-3-3.2-4.5-3.2-1.2 0-2.2.8-2.2 2.5 0 2.8 3.5 5.8 6.7 8.2 3.2-2.4 6.7-5.4 6.7-8.2 0-1.7-1-2.5-2.2-2.5Z"
-      />
-    </svg>
   );
 }
