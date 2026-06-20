@@ -353,6 +353,7 @@ const zhTW = {
     back: "返回",
     profile: "個人資料",
     logout: "登出",
+    saved: "已儲存",
     confirm: "確認",
     clear: "清除",
   },
