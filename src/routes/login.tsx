@@ -89,8 +89,8 @@ function LoginPage() {
 
   return (
     <main className="relative min-h-dvh font-sans text-foreground overflow-hidden">
-      {/* Background: soft blue sky + mountain silhouettes */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/10 to-primary/15" />
+      {/* Background: clean white sky + blue mountain silhouettes */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/50 to-slate-100/80" />
       <svg
         aria-hidden="true"
         viewBox="0 0 1440 900"
