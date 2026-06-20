@@ -15,6 +15,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import heroSuitcase from "@/assets/hero-suitcase.png";
 import { Input } from "@/components/ui/input";
 import { useTrips, tripsApi, type Trip } from "@/lib/trips-store";
 import { TripDialog } from "@/components/TripDialog";
@@ -85,30 +86,46 @@ function Index() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
-      {/* Hero banner — gradient card with CTA, inspired by the reference */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-banner p-6 text-white shadow-lift sm:p-8">
-        <div className="relative z-10 max-w-md">
-          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
-            <Compass className="h-3.5 w-3.5" />
-            {t("trips.heroTagline")}
+      {/* Hero banner — soft blue with 3D suitcase illustration */}
+      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-[#EEF3FB] via-[#E4EDFA] to-[#DCE7F7] p-6 shadow-soft sm:p-10">
+        {/* Mountain silhouettes */}
+        <svg
+          aria-hidden
+          viewBox="0 0 800 300"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-full w-full opacity-60"
+          preserveAspectRatio="xMidYMax slice"
+        >
+          <path d="M0,260 L120,180 L220,230 L340,140 L460,220 L600,160 L720,210 L800,180 L800,300 L0,300 Z" fill="#C8D7EC" />
+          <path d="M0,280 L100,220 L240,260 L380,200 L520,250 L660,210 L800,240 L800,300 L0,300 Z" fill="#B8CBE6" opacity="0.7" />
+        </svg>
+
+        <div className="relative z-10 grid items-center gap-6 sm:grid-cols-[1.2fr_1fr]">
+          <div className="max-w-md">
+            <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+              {t("trips.heroTitle")}
+            </h1>
+            <p className="mt-3 text-sm text-slate-600 sm:text-base">
+              {t("trips.heroSub")}
+            </p>
+            <Button
+              size="lg"
+              onClick={() => setCreateOpen(true)}
+              className="mt-6 h-12 rounded-full bg-[#2563EB] px-6 font-semibold text-white shadow-lift hover:bg-[#1D4ED8]"
+            >
+              <Plus className="mr-1.5 h-4 w-4" />
+              {t("trips.create")}
+            </Button>
           </div>
-          <h1 className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-            {t("trips.heroTitle")}
-          </h1>
-          <p className="mt-2 text-sm text-white/85 sm:text-base">
-            {t("trips.heroSub")}
-          </p>
-          <Button
-            size="lg"
-            onClick={() => setCreateOpen(true)}
-            className="mt-5 h-11 rounded-full bg-white px-5 font-semibold text-primary shadow-soft hover:bg-white/95"
-          >
-            <Plus className="mr-1.5 h-4 w-4" />
-            {t("trips.create")}
-          </Button>
+          <div className="relative hidden sm:block">
+            <img
+              src={heroSuitcase}
+              alt=""
+              width={512}
+              height={512}
+              className="mx-auto h-56 w-auto object-contain drop-shadow-2xl sm:h-72"
+            />
+          </div>
         </div>
-        <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
-        <div className="pointer-events-none absolute -bottom-12 right-12 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
       </section>
 
       {/* Search */}
