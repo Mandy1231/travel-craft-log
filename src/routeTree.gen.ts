@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as STripIdRouteImport } from './routes/s.$tripId'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedTripsTripIdRouteImport } from './routes/_authenticated/trips.$tripId'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -40,6 +41,11 @@ const STripIdRoute = STripIdRouteImport.update({
   path: '/s/$tripId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedTripsTripIdRoute =
   AuthenticatedTripsTripIdRouteImport.update({
     id: '/trips/$tripId',
@@ -51,12 +57,14 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/s/$tripId': typeof STripIdRoute
   '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/s/$tripId': typeof STripIdRoute
   '/': typeof AuthenticatedIndexRoute
   '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
@@ -66,6 +74,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/s/$tripId': typeof STripIdRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
@@ -76,15 +85,23 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/reset-password'
+    | '/profile'
     | '/s/$tripId'
     | '/trips/$tripId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/reset-password' | '/s/$tripId' | '/' | '/trips/$tripId'
+  to:
+    | '/login'
+    | '/reset-password'
+    | '/profile'
+    | '/s/$tripId'
+    | '/'
+    | '/trips/$tripId'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
     | '/reset-password'
+    | '/_authenticated/profile'
     | '/s/$tripId'
     | '/_authenticated/'
     | '/_authenticated/trips/$tripId'
@@ -134,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof STripIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/trips/$tripId': {
       id: '/_authenticated/trips/$tripId'
       path: '/trips/$tripId'
@@ -145,11 +169,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedTripsTripIdRoute: typeof AuthenticatedTripsTripIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedTripsTripIdRoute: AuthenticatedTripsTripIdRoute,
 }
@@ -167,13 +193,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
