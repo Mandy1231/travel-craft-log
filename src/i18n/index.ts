@@ -305,6 +305,12 @@ const zhCN = {
     routeSummary: "{{km}} 公里 · {{min}} 分钟",
     routeOrder: "最佳路线：{{sequence}}",
   },
+  profile: {
+    manageInfo: "管理你的个人信息。",
+    accountInfo: "账号信息",
+    accountDesc: "更新你的显示名称并查看账号详情。",
+    joined: "注册于",
+  },
   tripDialog: {
     editTitle: "编辑行程",
     createTitle: "创建新计划",
