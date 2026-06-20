@@ -86,19 +86,19 @@ function Index() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
-      {/* Hero banner — clean, elegant, minimalist */}
-      <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 via-white to-slate-100 p-8 sm:p-14">
+      {/* Hero banner — clean, elegant, blue */}
+      <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-br from-[#E8EEF8] via-[#F0F4FA] to-[#D6E0F0] p-8 sm:p-14">
         <div className="relative z-10 max-w-2xl">
-          <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-6xl">
+          <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-[#1E3A5F] sm:text-6xl">
             {t("trips.heroTitle")}
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-slate-500 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-[#4A6B8A] sm:text-lg">
             {t("trips.heroSub")}
           </p>
           <Button
             size="lg"
             onClick={() => setCreateOpen(true)}
-            className="mt-8 h-12 rounded-full bg-slate-900 px-8 font-medium text-white shadow-lift hover:bg-slate-800"
+            className="mt-8 h-12 rounded-full bg-[#2B5797] px-8 font-medium text-white shadow-lift hover:bg-[#1E3A5F]"
           >
             <Plus className="mr-2 h-4 w-4" />
             {t("trips.create")}
@@ -108,11 +108,11 @@ function Index() {
         {/* Subtle decorative circle */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-slate-200/40 to-slate-300/20 sm:-right-10 sm:-top-10 sm:h-80 sm:w-80"
+          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-[#B8CCE0]/40 to-[#A0B8D0]/20 sm:-right-10 sm:-top-10 sm:h-80 sm:w-80"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-20 -right-10 h-48 w-48 rounded-full bg-gradient-to-tr from-slate-100/60 to-slate-200/30 sm:-bottom-16 sm:right-20 sm:h-56 sm:w-56"
+          className="pointer-events-none absolute -bottom-20 -right-10 h-48 w-48 rounded-full bg-gradient-to-tr from-[#D0D8E8]/60 to-[#C0C8D8]/30 sm:-bottom-16 sm:right-20 sm:h-56 sm:w-56"
         />
       </section>
 
