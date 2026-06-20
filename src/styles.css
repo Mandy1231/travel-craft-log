@@ -37,66 +37,67 @@
   --color-mint: var(--mint);
   --color-sunset: var(--sunset);
 
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-soft: 0 1px 2px oklch(0.4 0.1 240 / 0.06), 0 8px 24px -12px oklch(0.4 0.15 240 / 0.18);
-  --shadow-lift: 0 10px 40px -16px oklch(0.45 0.18 240 / 0.35);
-  --shadow-glow: 0 0 0 4px oklch(0.6 0.15 240 / 0.12);
+  --shadow-soft: 0 1px 2px oklch(0.2 0.02 250 / 0.04), 0 6px 20px -12px oklch(0.2 0.02 250 / 0.10);
+  --shadow-lift: 0 10px 30px -16px oklch(0.2 0.02 250 / 0.18);
+  --shadow-glow: 0 0 0 4px oklch(0.62 0.19 256 / 0.12);
 }
 
 :root {
   --radius: 1rem;
 
-  /* Ocean blue base */
-  --background: oklch(0.985 0.012 240);
-  --foreground: oklch(0.22 0.04 250);
+  /* Cloud-white restrained palette */
+  /* surface #fafbfc, border #e8ecf1, muted-fg #94a3b8, primary #3b82f6 */
+  --background: oklch(0.992 0.002 250);
+  --foreground: oklch(0.22 0.03 250);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.04 250);
+  --card-foreground: oklch(0.22 0.03 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.04 250);
+  --popover-foreground: oklch(0.22 0.03 250);
 
-  --primary: oklch(0.58 0.18 250);          /* #3B82F6-ish */
-  --primary-foreground: oklch(0.99 0.01 250);
+  --primary: oklch(0.62 0.19 256);          /* #3B82F6 */
+  --primary-foreground: oklch(0.99 0.005 250);
 
-  --secondary: oklch(0.95 0.025 245);
-  --secondary-foreground: oklch(0.3 0.08 250);
+  --secondary: oklch(0.965 0.008 250);
+  --secondary-foreground: oklch(0.3 0.04 250);
 
-  --muted: oklch(0.96 0.015 245);
-  --muted-foreground: oklch(0.5 0.04 250);
+  --muted: oklch(0.965 0.008 250);
+  --muted-foreground: oklch(0.62 0.025 250);  /* #94a3b8 */
 
-  --accent: oklch(0.93 0.05 240);
-  --accent-foreground: oklch(0.3 0.12 250);
+  --accent: oklch(0.95 0.015 250);
+  --accent-foreground: oklch(0.3 0.06 250);
 
   --destructive: oklch(0.62 0.21 25);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.91 0.025 245);
-  --input: oklch(0.93 0.025 245);
-  --ring: oklch(0.58 0.16 250);
+  --border: oklch(0.93 0.008 250);            /* #e8ecf1 */
+  --input: oklch(0.93 0.008 250);
+  --ring: oklch(0.62 0.19 256);
 
-  --ocean: oklch(0.55 0.18 250);
-  --sky: oklch(0.75 0.12 235);
+  --ocean: oklch(0.62 0.19 256);
+  --sky: oklch(0.78 0.08 240);
   --coral: oklch(0.7 0.18 35);
   --mint: oklch(0.7 0.14 165);
   --sunset: oklch(0.72 0.16 65);
 
   /* day color palette */
   --day-1: oklch(0.62 0.22 25);    /* red */
-  --day-2: oklch(0.58 0.18 250);   /* blue */
+  --day-2: oklch(0.62 0.19 256);   /* blue */
   --day-3: oklch(0.65 0.16 160);   /* green */
   --day-4: oklch(0.72 0.16 65);    /* orange */
   --day-5: oklch(0.6 0.2 295);     /* purple */
   --day-6: oklch(0.68 0.18 350);   /* pink */
   --day-7: oklch(0.55 0.04 250);   /* gray */
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.62 0.18 245) 0%, oklch(0.45 0.2 260) 100%);
-  --gradient-sky: linear-gradient(135deg, oklch(0.93 0.05 240) 0%, oklch(0.88 0.08 230) 100%);
+  --gradient-hero: linear-gradient(135deg, oklch(0.985 0.005 250) 0%, oklch(0.94 0.012 250) 100%);
+  --gradient-sky: linear-gradient(135deg, oklch(0.985 0.005 250) 0%, oklch(0.96 0.01 250) 100%);
   --gradient-sunset: linear-gradient(135deg, oklch(0.78 0.13 55) 0%, oklch(0.68 0.16 35) 100%);
-  --gradient-ocean: linear-gradient(180deg, oklch(0.75 0.12 235) 0%, oklch(0.45 0.18 255) 100%);
-  --gradient-cta: linear-gradient(95deg, oklch(0.6 0.22 295) 0%, oklch(0.58 0.2 265) 50%, oklch(0.62 0.2 245) 100%);
-  --gradient-banner: linear-gradient(135deg, oklch(0.58 0.18 250) 0%, oklch(0.5 0.2 260) 100%);
+  --gradient-ocean: linear-gradient(180deg, oklch(0.78 0.08 240) 0%, oklch(0.62 0.19 256) 100%);
+  --gradient-cta: linear-gradient(95deg, oklch(0.62 0.19 256) 0%, oklch(0.55 0.2 260) 100%);
+  --gradient-banner: linear-gradient(135deg, oklch(0.985 0.005 250) 0%, oklch(0.94 0.012 250) 100%);
 }
 
 .dark {
