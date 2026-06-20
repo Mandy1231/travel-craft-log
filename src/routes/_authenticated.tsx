@@ -69,7 +69,7 @@ function AuthedLayout() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
-                  <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-hero text-xs font-semibold text-white">
+                  <div className="grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                     {email?.[0]?.toUpperCase() ?? "?"}
                   </div>
                   <span className="hidden text-sm sm:inline">{email ?? "..."}</span>
