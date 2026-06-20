@@ -268,7 +268,21 @@ function Index() {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
-    </main>
+function BrandMark() {
+  return (
+    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
+      <circle
+        cx="16"
+        cy="16"
+        r="14"
+        fill="none"
+        stroke="#2563EB"
+        strokeWidth="2.5"
+      />
+      <path
+        fill="#2563EB"
+        d="M20.5 11.5c-1.5 0-3.2 1.6-4.5 3.2-1.3-1.6-3-3.2-4.5-3.2-1.2 0-2.2.8-2.2 2.5 0 2.8 3.5 5.8 6.7 8.2 3.2-2.4 6.7-5.4 6.7-8.2 0-1.7-1-2.5-2.2-2.5Z"
+      />
+    </svg>
   );
 }
