@@ -138,6 +138,12 @@ const en = {
     routeSummary: "{{km}} km · {{min}} min",
     routeOrder: "Best route: {{sequence}}",
   },
+  profile: {
+    manageInfo: "Manage your personal information.",
+    accountInfo: "Account information",
+    accountDesc: "Update your display name and view your account details.",
+    joined: "Joined",
+  },
   tripDialog: {
     editTitle: "Edit trip",
     createTitle: "Create new trip",
