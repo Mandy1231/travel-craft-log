@@ -58,8 +58,10 @@ function AuthedLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-primary/10 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
-            <Compass className="h-4 w-4" />
+          <Link to="/" className="inline-flex items-center gap-2 text-base font-bold text-slate-900">
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#2563EB] text-white shadow-soft">
+              <Heart className="h-4 w-4 fill-white" />
+            </span>
             Wayfarer
           </Link>
           <div className="flex items-center gap-3">
