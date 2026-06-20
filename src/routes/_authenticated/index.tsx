@@ -15,7 +15,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroSuitcase from "@/assets/hero-suitcase.png";
+
 import { Input } from "@/components/ui/input";
 import { useTrips, tripsApi, type Trip } from "@/lib/trips-store";
 import { TripDialog } from "@/components/TripDialog";
@@ -86,46 +86,34 @@ function Index() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
-      {/* Hero banner — soft blue with 3D suitcase illustration */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-[#EEF3FB] via-[#E4EDFA] to-[#DCE7F7] p-6 shadow-soft sm:p-10">
-        {/* Mountain silhouettes */}
-        <svg
-          aria-hidden
-          viewBox="0 0 800 300"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-full w-full opacity-60"
-          preserveAspectRatio="xMidYMax slice"
-        >
-          <path d="M0,260 L120,180 L220,230 L340,140 L460,220 L600,160 L720,210 L800,180 L800,300 L0,300 Z" fill="#C8D7EC" />
-          <path d="M0,280 L100,220 L240,260 L380,200 L520,250 L660,210 L800,240 L800,300 L0,300 Z" fill="#B8CBE6" opacity="0.7" />
-        </svg>
-
-        <div className="relative z-10 grid items-center gap-6 sm:grid-cols-[1.2fr_1fr]">
-          <div className="max-w-md">
-            <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-              {t("trips.heroTitle")}
-            </h1>
-            <p className="mt-3 text-sm text-slate-600 sm:text-base">
-              {t("trips.heroSub")}
-            </p>
-            <Button
-              size="lg"
-              onClick={() => setCreateOpen(true)}
-              className="mt-6 h-12 rounded-full bg-[#2563EB] px-6 font-semibold text-white shadow-lift hover:bg-[#1D4ED8]"
-            >
-              <Plus className="mr-1.5 h-4 w-4" />
-              {t("trips.create")}
-            </Button>
-          </div>
-          <div className="relative hidden sm:block">
-            <img
-              src={heroSuitcase}
-              alt=""
-              width={512}
-              height={512}
-              className="mx-auto h-56 w-auto object-contain drop-shadow-2xl sm:h-72"
-            />
-          </div>
+      {/* Hero banner — clean, elegant, minimalist */}
+      <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 via-white to-slate-100 p-8 sm:p-14">
+        <div className="relative z-10 max-w-2xl">
+          <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-6xl">
+            {t("trips.heroTitle")}
+          </h1>
+          <p className="mt-4 text-base leading-relaxed text-slate-500 sm:text-lg">
+            {t("trips.heroSub")}
+          </p>
+          <Button
+            size="lg"
+            onClick={() => setCreateOpen(true)}
+            className="mt-8 h-12 rounded-full bg-slate-900 px-8 font-medium text-white shadow-lift hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {t("trips.create")}
+          </Button>
         </div>
+
+        {/* Subtle decorative circle */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-slate-200/40 to-slate-300/20 sm:-right-10 sm:-top-10 sm:h-80 sm:w-80"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -right-10 h-48 w-48 rounded-full bg-gradient-to-tr from-slate-100/60 to-slate-200/30 sm:-bottom-16 sm:right-20 sm:h-56 sm:w-56"
+        />
       </section>
 
       {/* Search */}
