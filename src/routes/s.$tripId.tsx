@@ -115,7 +115,7 @@ function SharedTrip() {
       </Link>
 
       <header className="mb-8 flex items-start gap-5">
-        <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-gradient-hero text-5xl shadow-lift">
+        <div className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl border border-slate-200 bg-white text-5xl shadow-soft">
           {trip.coverEmoji}
         </div>
         <div className="min-w-0 flex-1 pt-1">
