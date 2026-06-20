@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Compass, LogOut, User } from "lucide-react";
+import { Heart, LogOut, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
