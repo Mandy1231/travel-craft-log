@@ -19,6 +19,7 @@ const en = {
     back: "Back",
     profile: "Profile",
     logout: "Sign out",
+    saved: "Saved",
     confirm: "Confirm",
     clear: "Clear",
   },
@@ -137,6 +138,12 @@ const en = {
     routeSummary: "{{km}} km · {{min}} min",
     routeOrder: "Best route: {{sequence}}",
   },
+  profile: {
+    manageInfo: "Manage your personal information.",
+    accountInfo: "Account information",
+    accountDesc: "Update your display name and view your account details.",
+    joined: "Joined",
+  },
   tripDialog: {
     editTitle: "Edit trip",
     createTitle: "Create new trip",
@@ -179,6 +186,7 @@ const zhCN = {
     back: "返回",
     profile: "个人资料",
     logout: "退出登录",
+    saved: "已保存",
     confirm: "确认",
     clear: "清除",
   },
@@ -297,6 +305,12 @@ const zhCN = {
     routeSummary: "{{km}} 公里 · {{min}} 分钟",
     routeOrder: "最佳路线：{{sequence}}",
   },
+  profile: {
+    manageInfo: "管理你的个人信息。",
+    accountInfo: "账号信息",
+    accountDesc: "更新你的显示名称并查看账号详情。",
+    joined: "注册于",
+  },
   tripDialog: {
     editTitle: "编辑行程",
     createTitle: "创建新计划",
@@ -339,6 +353,7 @@ const zhTW = {
     back: "返回",
     profile: "個人資料",
     logout: "登出",
+    saved: "已儲存",
     confirm: "確認",
     clear: "清除",
   },
@@ -456,6 +471,12 @@ const zhTW = {
     routeFailed: "無法取得路線，顯示直線連接",
     routeSummary: "{{km}} 公里 · {{min}} 分鐘",
     routeOrder: "最佳路線：{{sequence}}",
+  },
+  profile: {
+    manageInfo: "管理你的個人資訊。",
+    accountInfo: "帳號資訊",
+    accountDesc: "更新你的顯示名稱並查看帳號詳情。",
+    joined: "註冊於",
   },
   tripDialog: {
     editTitle: "編輯行程",
