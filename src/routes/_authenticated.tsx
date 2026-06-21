@@ -30,9 +30,9 @@ export const Route = createFileRoute("/_authenticated")({
       });
     }
   },
-  // Show a fallback immediately during the auth-check transition so the
-  // screen never goes blank between route changes.
-  pendingMs: 0,
+  // Only show a loading fallback if the auth check actually stalls; otherwise
+  // fast navigations would flash a spinner on every page change.
+  pendingMs: 300,
   pendingMinMs: 0,
   pendingComponent: () => (
     <div className="grid min-h-[60vh] place-items-center">
