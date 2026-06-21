@@ -141,8 +141,13 @@ const en = {
   profile: {
     manageInfo: "Manage your personal information.",
     accountInfo: "Account information",
-    accountDesc: "Update your display name and view your account details.",
+    accountDesc: "Update your nickname, bio and location.",
     joined: "Joined",
+    bio: "Bio",
+    bioPlaceholder: "Tell others a little about yourself…",
+    location: "Location",
+    locationPlaceholder: "e.g. Taipei, Taiwan",
+    loadFailed: "Failed to load profile",
   },
   tripDialog: {
     editTitle: "Edit trip",
