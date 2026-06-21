@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { MapPreview } from "@/components/MapPreview";
 import { AddAttractionDialog } from "@/components/AddAttractionDialog";
 import { TripDialog } from "@/components/TripDialog";
-import { useTrip, tripsApi, type Attraction, type Day, type Trip } from "@/lib/trips-store";
+import { useTripQuery, tripsApi, type Attraction, type Day, type Trip } from "@/lib/trips-store";
 import { optimizeDayOrder } from "@/lib/route-optimize";
 import { toast } from "sonner";
 import {
@@ -210,7 +210,7 @@ function TripDetail() {
   const { t } = useTranslation();
   const { tripId } = Route.useParams();
   const navigate = useNavigate();
-  const trip = useTrip(tripId);
+  const { data: trip, isLoading, isFetching } = useTripQuery(tripId);
 
   const [editTripOpen, setEditTripOpen] = useState(false);
   const [addCtx, setAddCtx] = useState<{ dayId: string; attraction?: Attraction } | null>(null);
@@ -224,6 +224,13 @@ function TripDetail() {
   );
 
   if (!trip) {
+    if (isLoading || isFetching) {
+      return (
+        <div className="mx-auto max-w-3xl px-6 py-24 text-center text-muted-foreground">
+          {t("common.loading")}
+        </div>
+      );
+    }
     return (
       <div className="mx-auto max-w-3xl px-6 py-24 text-center">
         <h1 className="font-display text-3xl">{t("trips.notFound")}</h1>
@@ -421,7 +428,7 @@ function DayAttractions({
   onEdit,
   onAdd,
 }: {
-  trip: ReturnType<typeof useTrip> & {};
+  trip: Trip;
   day: Day;
   dayIndex: number;
   colorVar: string;

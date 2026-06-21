@@ -104,12 +104,16 @@ export function useTrips() {
 }
 
 export function useTrip(id: string | undefined): Trip | undefined {
-  const { data } = useQuery({
+  const { data } = useTripQuery(id);
+  return data ?? undefined;
+}
+
+export function useTripQuery(id: string | undefined) {
+  return useQuery({
     queryKey: ["trips", id],
     queryFn: () => (id ? fetchTrip(id) : Promise.resolve(null)),
     enabled: !!id,
   });
-  return data ?? undefined;
 }
 
 function deriveVisibility(startDate?: string, current?: Visibility): Visibility {
