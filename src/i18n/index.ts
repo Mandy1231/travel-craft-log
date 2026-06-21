@@ -485,8 +485,13 @@ const zhTW = {
   profile: {
     manageInfo: "管理你的個人資訊。",
     accountInfo: "帳號資訊",
-    accountDesc: "更新你的顯示名稱並查看帳號詳情。",
+    accountDesc: "更新你的暱稱、個人簡介與所在地。",
     joined: "註冊於",
+    bio: "個人簡介",
+    bioPlaceholder: "簡單介紹一下你自己…",
+    location: "所在地",
+    locationPlaceholder: "例如：台北，台灣",
+    loadFailed: "載入個人資料失敗",
   },
   tripDialog: {
     editTitle: "編輯行程",
