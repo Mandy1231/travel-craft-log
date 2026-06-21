@@ -313,8 +313,13 @@ const zhCN = {
   profile: {
     manageInfo: "管理你的个人信息。",
     accountInfo: "账号信息",
-    accountDesc: "更新你的显示名称并查看账号详情。",
+    accountDesc: "更新你的昵称、个人简介与所在地。",
     joined: "注册于",
+    bio: "个人简介",
+    bioPlaceholder: "简单介绍一下你自己…",
+    location: "所在地",
+    locationPlaceholder: "例如：上海，中国",
+    loadFailed: "加载个人资料失败",
   },
   tripDialog: {
     editTitle: "编辑行程",
