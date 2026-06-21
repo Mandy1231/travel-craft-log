@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { MapPreview } from "@/components/MapPreview";
 import { AddAttractionDialog } from "@/components/AddAttractionDialog";
 import { TripDialog } from "@/components/TripDialog";
-import { useTrip, tripsApi, type Attraction, type Day, type Trip } from "@/lib/trips-store";
+import { useTripQuery, tripsApi, type Attraction, type Day, type Trip } from "@/lib/trips-store";
 import { optimizeDayOrder } from "@/lib/route-optimize";
 import { toast } from "sonner";
 import {
