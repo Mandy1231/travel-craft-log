@@ -36,16 +36,27 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthedLayout() {
   const { t } = useTranslation();
   const [email, setEmail] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
 
   useEffect(() => {
-    // Read once on mount. Sign-out is already handled by the root listener
-    // (which invalidates the router and re-runs this beforeLoad → redirects
-    // to /login). Adding a second listener here caused a redirect loop on
-    // mobile after sign-in because TOKEN_REFRESHED / INITIAL_SESSION events
-    // raced with navigation.
-    supabase.auth.getSession().then(({ data }) => {
-      setEmail(data.session?.user?.email ?? null);
-    });
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      const user = data.session?.user;
+      if (cancelled || !user) return;
+      setEmail(user.email ?? null);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      setDisplayName(profile?.display_name ?? user.user_metadata?.display_name ?? null);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -53,6 +64,8 @@ function AuthedLayout() {
     toast.success(t("auth.signedOut"));
   };
 
+  const label = displayName || email;
+  const initial = (displayName || email)?.[0]?.toUpperCase() ?? "?";
 
   return (
     <div className="min-h-screen">
@@ -70,11 +83,12 @@ function AuthedLayout() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <div className="grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                    {email?.[0]?.toUpperCase() ?? "?"}
+                    {initial}
                   </div>
-                  <span className="hidden text-sm sm:inline">{email ?? "..."}</span>
+                  <span className="hidden max-w-[160px] truncate text-sm sm:inline">{label ?? "..."}</span>
                 </Button>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">
                   {email}
