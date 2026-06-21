@@ -521,24 +521,6 @@ const zhTW = {
   },
 } as const;
 
-if (!i18n.isInitialized) {
-  i18n.use(initReactI18next).init({
-    resources: {
-      en: { translation: en },
-      "zh-CN": { translation: zhCN },
-      "zh-TW": { translation: zhTW },
-    },
-    // Use a deterministic initial language so SSR markup matches the first
-    // client render. We swap to the stored / browser preference inside a
-    // post-mount effect to avoid hydration mismatches.
-    lng: "en",
-    fallbackLng: "en",
-
-    supportedLngs: [...SUPPORTED],
-    interpolation: { escapeValue: false },
-  });
-}
-
 function pickBrowserLang(): Lang | null {
   if (typeof navigator === "undefined") return null;
   const list = navigator.languages?.length ? navigator.languages : [navigator.language];
@@ -552,13 +534,40 @@ function pickBrowserLang(): Lang | null {
   return null;
 }
 
-/** Apply user-preferred language. Call after mount (client only). */
+function resolveInitialLang(): Lang {
+  if (typeof window === "undefined") return "en";
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY) as Lang | null;
+    if (stored && (SUPPORTED as readonly string[]).includes(stored)) return stored;
+  } catch {
+    // ignore storage errors
+  }
+  return pickBrowserLang() ?? "en";
+}
+
+if (!i18n.isInitialized) {
+  i18n.use(initReactI18next).init({
+    resources: {
+      en: { translation: en },
+      "zh-CN": { translation: zhCN },
+      "zh-TW": { translation: zhTW },
+    },
+    // SSR always renders English for deterministic markup. On the client we
+    // resolve the stored / browser language synchronously at module load so
+    // the very first render uses the right language — no post-mount swap,
+    // no flicker between English and Chinese on the login page.
+    lng: resolveInitialLang(),
+    fallbackLng: "en",
+
+    supportedLngs: [...SUPPORTED],
+    interpolation: { escapeValue: false },
+  });
+}
+
+/** Re-apply user-preferred language. Safe to call after mount (client only). */
 export function applyStoredLanguage() {
   if (typeof window === "undefined") return;
-  const stored = window.localStorage.getItem(STORAGE_KEY) as Lang | null;
-  const next = stored && (SUPPORTED as readonly string[]).includes(stored)
-    ? stored
-    : pickBrowserLang() ?? "en";
+  const next = resolveInitialLang();
   if (next !== i18n.language) i18n.changeLanguage(next);
 }
 
