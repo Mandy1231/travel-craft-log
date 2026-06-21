@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Heart, LogOut, User } from "lucide-react";
+import { Heart, LogOut, User, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +30,15 @@ export const Route = createFileRoute("/_authenticated")({
       });
     }
   },
+  // Show a fallback immediately during the auth-check transition so the
+  // screen never goes blank between route changes.
+  pendingMs: 0,
+  pendingMinMs: 0,
+  pendingComponent: () => (
+    <div className="grid min-h-[60vh] place-items-center">
+      <Loader2 className="h-6 w-6 animate-spin text-primary/70" />
+    </div>
+  ),
   component: AuthedLayout,
 });
 
