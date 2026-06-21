@@ -81,13 +81,16 @@ function AuthedLayout() {
             <LanguageSwitcher />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <div className="grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                <Button variant="ghost" size="sm" className="gap-2 px-2 sm:px-3">
+                  <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                     {initial}
                   </div>
-                  <span className="hidden max-w-[160px] truncate text-sm sm:inline">{label ?? "..."}</span>
+                  <span className="min-w-0 max-w-[120px] truncate text-sm sm:max-w-[160px]">
+                    {label ?? "..."}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
+
 
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">
