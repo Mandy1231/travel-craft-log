@@ -428,7 +428,7 @@ function DayAttractions({
   onEdit,
   onAdd,
 }: {
-  trip: ReturnType<typeof useTrip> & {};
+  trip: Trip;
   day: Day;
   dayIndex: number;
   colorVar: string;
