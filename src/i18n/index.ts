@@ -141,8 +141,13 @@ const en = {
   profile: {
     manageInfo: "Manage your personal information.",
     accountInfo: "Account information",
-    accountDesc: "Update your display name and view your account details.",
+    accountDesc: "Update your nickname, bio and location.",
     joined: "Joined",
+    bio: "Bio",
+    bioPlaceholder: "Tell others a little about yourself…",
+    location: "Location",
+    locationPlaceholder: "e.g. Taipei, Taiwan",
+    loadFailed: "Failed to load profile",
   },
   tripDialog: {
     editTitle: "Edit trip",
@@ -308,8 +313,13 @@ const zhCN = {
   profile: {
     manageInfo: "管理你的个人信息。",
     accountInfo: "账号信息",
-    accountDesc: "更新你的显示名称并查看账号详情。",
+    accountDesc: "更新你的昵称、个人简介与所在地。",
     joined: "注册于",
+    bio: "个人简介",
+    bioPlaceholder: "简单介绍一下你自己…",
+    location: "所在地",
+    locationPlaceholder: "例如：上海，中国",
+    loadFailed: "加载个人资料失败",
   },
   tripDialog: {
     editTitle: "编辑行程",
@@ -475,8 +485,13 @@ const zhTW = {
   profile: {
     manageInfo: "管理你的個人資訊。",
     accountInfo: "帳號資訊",
-    accountDesc: "更新你的顯示名稱並查看帳號詳情。",
+    accountDesc: "更新你的暱稱、個人簡介與所在地。",
     joined: "註冊於",
+    bio: "個人簡介",
+    bioPlaceholder: "簡單介紹一下你自己…",
+    location: "所在地",
+    locationPlaceholder: "例如：台北，台灣",
+    loadFailed: "載入個人資料失敗",
   },
   tripDialog: {
     editTitle: "編輯行程",
