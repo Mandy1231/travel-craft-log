@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect, Link } from "@tanstack/react-router"
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
+import { getAuthSession, getAuthSessionSync } from "@/lib/auth-store";
 import { Button } from "@/components/ui/button";
 import { Heart, LogOut, User, Loader2 } from "lucide-react";
 import {
@@ -22,8 +23,12 @@ export const Route = createFileRoute("/_authenticated")({
   // bounce between /login and the protected page.
   ssr: false,
   beforeLoad: async ({ location }) => {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+    // Read from the in-memory auth store instead of calling
+    // supabase.auth.getSession() on every navigation. The store is hydrated
+    // once at app start and kept fresh via onAuthStateChange, so this is
+    // synchronous after the first load — no periodic flicker on nav.
+    const session = getAuthSessionSync() ?? (await getAuthSession());
+    if (!session) {
       throw redirect({
         to: "/login",
         search: { redirect: location.href },
