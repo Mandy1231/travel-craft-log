@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { bindQueryClient } from "@/lib/trips-store";
 import { applyStoredLanguage } from "@/i18n";
+import { initAuth } from "@/lib/auth-store";
 
 
 
