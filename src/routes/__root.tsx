@@ -135,6 +135,7 @@ function RootComponent() {
   useEffect(() => {
     bindQueryClient(queryClient);
     applyStoredLanguage();
+    void initAuth();
     let unsub: (() => void) | undefined;
     import("@/integrations/supabase/client").then(({ supabase }) => {
       const { data } = supabase.auth.onAuthStateChange((event) => {
