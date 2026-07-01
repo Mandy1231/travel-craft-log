@@ -86,12 +86,7 @@ function AuthedLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-base font-bold text-slate-900">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-primary-foreground shadow-soft">
-              <Logo className="h-4 w-4" />
-            </span>
-            Wayfarer
-          </Link>
+          <Link to="/" class
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
             <DropdownMenu>
