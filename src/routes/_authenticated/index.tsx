@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Logo } from "@/components/Logo";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -86,6 +87,14 @@ function Index() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
+      {/* Brand header — matches login page */}
+      <div className="mb-8 flex items-center justify-center gap-2.5">
+        <Logo className="h-8 w-8 text-primary" />
+        <span className="text-[22px] font-bold tracking-tight text-foreground">
+          Wayfarer
+        </span>
+      </div>
+
       {/* Hero banner — clean, elegant, blue */}
       <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/5 via-white to-primary/10 p-8 sm:p-14">
         <div className="relative z-10 max-w-2xl">
