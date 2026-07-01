@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Logo } from "@/components/Logo";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
