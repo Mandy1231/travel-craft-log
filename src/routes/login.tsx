@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Logo } from "@/components/Logo";
 import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -131,7 +132,7 @@ function LoginPage() {
             <div className="rounded-3xl border border-white/60 bg-white p-7 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)] backdrop-blur sm:p-9">
               {/* Brand inside card — travel-brand-inspired logo */}
               <div className="mb-6 flex items-center justify-center gap-2.5">
-                <BrandMark />
+                <Logo className="h-8 w-8 text-primary" />
                 <span className="text-[22px] font-bold tracking-tight text-foreground">
                   Wayfarer
                 </span>
@@ -253,28 +254,6 @@ function LoginPage() {
   );
 }
 
-/**
- * Simple circle + leaf mark — clean, minimal, inspired by
- * modern travel brand logos (Trip.com, Booking style).
- */
-function BrandMark() {
-  return (
-    <svg viewBox="0 0 32 32" className="h-8 w-8 text-primary" aria-hidden="true">
-      <circle
-        cx="16"
-        cy="16"
-        r="14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-      />
-      <path
-        fill="currentColor"
-        d="M20.5 11.5c-1.5 0-3.2 1.6-4.5 3.2-1.3-1.6-3-3.2-4.5-3.2-1.2 0-2.2.8-2.2 2.5 0 2.8 3.5 5.8 6.7 8.2 3.2-2.4 6.7-5.4 6.7-8.2 0-1.7-1-2.5-2.2-2.5Z"
-      />
-    </svg>
-  );
-}
 
 function FieldEmail({ value, onChange, t }: { value: string; onChange: (v: string) => void; t: (k: string) => string }) {
   return (

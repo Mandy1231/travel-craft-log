@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { getAuthSession, getAuthSessionSync } from "@/lib/auth-store";
 import { Button } from "@/components/ui/button";
-import { Heart, LogOut, User, Loader2 } from "lucide-react";
+import { LogOut, User, Loader2 } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -87,7 +88,7 @@ function AuthedLayout() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
           <Link to="/" className="inline-flex items-center gap-2 text-base font-bold text-slate-900">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-primary-foreground shadow-soft">
-              <Heart className="h-4 w-4 fill-current" />
+              <Logo className="h-4 w-4" />
             </span>
             Wayfarer
           </Link>
