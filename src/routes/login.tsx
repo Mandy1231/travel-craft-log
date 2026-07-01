@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Logo } from "@/components/Logo";
 import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -131,7 +132,7 @@ function LoginPage() {
             <div className="rounded-3xl border border-white/60 bg-white p-7 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)] backdrop-blur sm:p-9">
               {/* Brand inside card — travel-brand-inspired logo */}
               <div className="mb-6 flex items-center justify-center gap-2.5">
-                <BrandMark />
+                <Logo className="h-8 w-8 text-primary" />
                 <span className="text-[22px] font-bold tracking-tight text-foreground">
                   Wayfarer
                 </span>
