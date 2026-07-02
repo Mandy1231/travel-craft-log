@@ -1,5 +1,6 @@
-import { Plus } from "lucide-react";
+import { Plus, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function TripHero({
   title,
@@ -54,23 +55,12 @@ export function TripSearchBar({
   return (
     <div className="mb-8">
       <div className="relative">
-        <svg
-          className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
-        <input
+        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex h-12 w-full rounded-full border border-border bg-card pl-10 pr-4 text-base shadow-soft outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30"
+          className="h-12 rounded-full border-border bg-card pl-10 shadow-soft focus-visible:ring-primary/30"
         />
       </div>
     </div>
@@ -86,17 +76,7 @@ export function TripListEmpty({
 }) {
   return (
     <div className="grid place-items-center rounded-3xl border-2 border-dashed border-primary/20 bg-gradient-sky/40 px-6 py-24 text-center">
-      <svg
-        className="mb-3 h-10 w-10 text-primary/60"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-      </svg>
+      <Sparkles className="mb-3 h-10 w-10 text-primary/60" />
       <p className="text-lg font-medium text-primary">
         {hasNoTrips ? t("trips.emptyNoTrips") : t("trips.emptyNoMatches")}
       </p>
