@@ -3,7 +3,7 @@ import { Calendar, Copy, Eye, MapPin, Pencil, Share2, Trash2 } from "lucide-reac
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { tripsApi, type Trip } from "@/lib/trips-store";
-import { formatTripRange, tripDayCount } from "@/services/trips-share";
+import { formatTripRange, tripDayCount } from "@/lib/trip-utils";
 
 interface Props {
   trip: Trip;

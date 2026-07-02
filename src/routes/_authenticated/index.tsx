@@ -7,7 +7,7 @@ import { TripHero, TripSearchBar, TripListEmpty } from "@/components/trips/TripH
 import { TripCard } from "@/components/trips/TripCard";
 import { DeleteTripDialog } from "@/components/trips/DeleteTripDialog";
 import { useTripSearch } from "@/hooks/useTripSearch";
-import { copyTripShareLink } from "@/services/trips-share";
+import { copyTripShareLink } from "@/services/share";
 
 export const Route = createFileRoute("/_authenticated/")({
   component: Index,
