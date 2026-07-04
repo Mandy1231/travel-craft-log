@@ -47,8 +47,7 @@ function ResetPasswordPage() {
       await supabase.auth.signOut();
       navigate({ to: "/login", replace: true });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
-      toast.error(msg);
+      toast.error(messageFromError(err, t("auth.operationFailed")));
     } finally {
       setLoading(false);
     }

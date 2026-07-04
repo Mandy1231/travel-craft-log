@@ -40,7 +40,7 @@ export function useLogin(redirect: string) {
       }
       navigate({ to: redirect, replace: true });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("auth.operationFailed"));
+      toast.error(messageFromError(err, t("auth.operationFailed")));
     } finally {
       setLoading(false);
     }

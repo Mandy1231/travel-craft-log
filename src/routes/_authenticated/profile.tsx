@@ -85,8 +85,7 @@ function ProfilePage() {
 
       toast.success(t("common.saved"));
     } catch (err) {
-      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
-      toast.error(msg);
+      toast.error(messageFromError(err, t("auth.operationFailed")));
     } finally {
       setSaving(false);
     }
