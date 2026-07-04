@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Compass, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { messageFromError } from "@/lib/errors";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
@@ -47,8 +48,7 @@ function ResetPasswordPage() {
       await supabase.auth.signOut();
       navigate({ to: "/login", replace: true });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
-      toast.error(msg);
+      toast.error(messageFromError(err, t("auth.operationFailed")));
     } finally {
       setLoading(false);
     }

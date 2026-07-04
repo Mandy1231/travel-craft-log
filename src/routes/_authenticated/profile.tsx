@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Mail, User, Calendar, Loader2, MapPin, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { messageFromError } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -85,8 +86,7 @@ function ProfilePage() {
 
       toast.success(t("common.saved"));
     } catch (err) {
-      const msg = err instanceof Error ? err.message : t("auth.operationFailed");
-      toast.error(msg);
+      toast.error(messageFromError(err, t("auth.operationFailed")));
     } finally {
       setSaving(false);
     }

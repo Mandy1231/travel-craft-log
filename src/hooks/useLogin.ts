@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { messageFromError } from "@/lib/errors";
 import { authService } from "@/services/auth";
 
 export type LoginMode = "login" | "signup";
@@ -40,7 +41,7 @@ export function useLogin(redirect: string) {
       }
       navigate({ to: redirect, replace: true });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("auth.operationFailed"));
+      toast.error(messageFromError(err, t("auth.operationFailed")));
     } finally {
       setLoading(false);
     }
