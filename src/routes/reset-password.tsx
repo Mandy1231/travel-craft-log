@@ -14,6 +14,7 @@ export const Route = createFileRoute("/reset-password")({
     meta: [
       { title: "Reset password · Wayfarer" },
       { name: "description", content: "Set a new password for your Wayfarer account." },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: ResetPasswordPage,
