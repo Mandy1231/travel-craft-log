@@ -552,17 +552,20 @@ if (!i18n.isInitialized) {
       "zh-CN": { translation: zhCN },
       "zh-TW": { translation: zhTW },
     },
-    // SSR always renders English for deterministic markup. On the client we
-    // resolve the stored / browser language synchronously at module load so
-    // the very first render uses the right language — no post-mount swap,
-    // no flicker between English and Chinese on the login page.
-    lng: resolveInitialLang(),
+    // Always initialize with English so the server-rendered HTML and the
+    // very first client render match. `applyStoredLanguage()` runs from a
+    // root useEffect after hydration and swaps to the user's real language.
+    // This is what prevents the "server said Welcome / client said 歡迎"
+    // hydration mismatch on the login page.
+    lng: "en",
     fallbackLng: "en",
-
     supportedLngs: [...SUPPORTED],
     interpolation: { escapeValue: false },
   });
 }
+
+// Silence unused-var lint; resolveInitialLang is used by applyStoredLanguage.
+void resolveInitialLang;
 
 /** Re-apply user-preferred language. Safe to call after mount (client only). */
 export function applyStoredLanguage() {
