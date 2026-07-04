@@ -589,6 +589,8 @@ if (!i18n.isInitialized) {
 // swaps to the user's real language immediately after hydration commits.
 if (typeof window !== "undefined" && i18n.language !== "en") {
   i18n.changeLanguage("en");
+}
+
 
 /** Re-apply user-preferred language. Safe to call after mount (client only). */
 export function applyStoredLanguage() {
