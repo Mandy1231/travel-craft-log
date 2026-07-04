@@ -25,10 +25,13 @@ export function LoginLayout({ children }: { children: ReactNode }) {
             <div className="mb-6 grid h-12 w-12 place-items-center rounded-xl bg-white/70 ring-1 ring-primary/20 backdrop-blur">
               <Compass className="h-6 w-6 text-primary" strokeWidth={2.25} />
             </div>
-            <h2 className="text-3xl font-bold leading-tight tracking-tight text-foreground">
+            <h2
+              className="text-3xl font-bold leading-tight tracking-tight text-foreground"
+              suppressHydrationWarning
+            >
               {t("auth.tagline")}
             </h2>
-            <p className="mt-4 text-sm text-muted-foreground">
+            <p className="mt-4 text-sm text-muted-foreground" suppressHydrationWarning>
               {t("auth.taglineSub")}
             </p>
           </div>
