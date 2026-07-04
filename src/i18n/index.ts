@@ -564,9 +564,6 @@ if (!i18n.isInitialized) {
   });
 }
 
-// Silence unused-var lint; resolveInitialLang is used by applyStoredLanguage.
-void resolveInitialLang;
-
 /** Re-apply user-preferred language. Safe to call after mount (client only). */
 export function applyStoredLanguage() {
   if (typeof window === "undefined") return;
