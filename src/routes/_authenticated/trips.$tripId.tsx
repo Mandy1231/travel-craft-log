@@ -14,6 +14,10 @@ import { useDayEditor } from "@/hooks/useDayEditor";
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
   head: () => ({
+    meta: [
+      { title: "行程详情 · Wayfarer" },
+      { name: "robots", content: "noindex" },
+    ],
     links: [
       {
         rel: "stylesheet",
