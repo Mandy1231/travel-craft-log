@@ -9,16 +9,44 @@ import type { Trip, Day, Attraction } from "@/lib/trips-store";
 
 export const Route = createFileRoute("/s/$tripId")({
   ssr: false,
-  head: () => ({
-    links: [
-      {
-        rel: "stylesheet",
-        href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-        integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
-        crossOrigin: "",
-      },
-    ],
-  }),
+  loader: async ({ params }) => {
+    const { data } = await supabase
+      .from("trips")
+      .select("title, description")
+      .eq("id", params.tripId)
+      .maybeSingle();
+    return {
+      title: data?.title ?? null,
+      description: data?.description ?? null,
+    };
+  },
+  head: ({ params, loaderData }) => {
+    const title = loaderData?.title
+      ? `${loaderData.title} · Wayfarer`
+      : "行程分享 · Wayfarer";
+    const description =
+      loaderData?.description ?? "查看这份由 Wayfarer 制作的旅行计划。";
+    const url = `https://travel-craft-log.lovable.app/s/${params.tripId}`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+      ],
+      links: [
+        { rel: "canonical", href: url },
+        {
+          rel: "stylesheet",
+          href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+          integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
+          crossOrigin: "",
+        },
+      ],
+    };
+  },
   component: SharedTrip,
 });
 
