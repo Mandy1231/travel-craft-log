@@ -13,6 +13,16 @@ import { TripDetailSkeleton } from "@/components/trip-detail/TripDetailSkeleton"
 import { useDayEditor } from "@/hooks/useDayEditor";
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
+  head: () => ({
+    links: [
+      {
+        rel: "stylesheet",
+        href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+        integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
+        crossOrigin: "",
+      },
+    ],
+  }),
   component: TripDetail,
 });
 

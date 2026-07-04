@@ -9,6 +9,16 @@ import type { Trip, Day, Attraction } from "@/lib/trips-store";
 
 export const Route = createFileRoute("/s/$tripId")({
   ssr: false,
+  head: () => ({
+    links: [
+      {
+        rel: "stylesheet",
+        href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+        integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
+        crossOrigin: "",
+      },
+    ],
+  }),
   component: SharedTrip,
 });
 
