@@ -1,8 +1,10 @@
 import { Briefcase, Camera, Compass, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/Logo";
 
 export function LoginLayout({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   return (
     <main className="relative min-h-dvh font-sans text-foreground overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/50 to-slate-100/80" />
