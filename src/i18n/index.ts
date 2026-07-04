@@ -22,6 +22,12 @@ const en = {
     saved: "Saved",
     confirm: "Confirm",
     clear: "Clear",
+    notFoundTitle: "Page not found",
+    notFoundDesc: "The page you're looking for doesn't exist or has been moved.",
+    goHome: "Go home",
+    errorTitle: "This page didn't load",
+    errorDesc: "Something went wrong on our end. You can try refreshing or head back home.",
+    tryAgain: "Try again",
   },
   auth: {
     welcomeBack: "Welcome to Wayfarer",
@@ -194,6 +200,12 @@ const zhCN = {
     saved: "已保存",
     confirm: "确认",
     clear: "清除",
+    notFoundTitle: "页面未找到",
+    notFoundDesc: "你要找的页面不存在或已被移除。",
+    goHome: "返回首页",
+    errorTitle: "页面加载失败",
+    errorDesc: "发生了一点错误。你可以重试或返回首页。",
+    tryAgain: "重试",
   },
   auth: {
     welcomeBack: "欢迎来到 Wayfarer",
@@ -366,6 +378,12 @@ const zhTW = {
     saved: "已儲存",
     confirm: "確認",
     clear: "清除",
+    notFoundTitle: "找不到頁面",
+    notFoundDesc: "你要找的頁面不存在或已被移除。",
+    goHome: "回到首頁",
+    errorTitle: "頁面載入失敗",
+    errorDesc: "發生了一點錯誤。你可以重試或回到首頁。",
+    tryAgain: "重試",
   },
   auth: {
     welcomeBack: "歡迎來到 Wayfarer",
@@ -552,13 +570,13 @@ if (!i18n.isInitialized) {
       "zh-CN": { translation: zhCN },
       "zh-TW": { translation: zhTW },
     },
-    // SSR always renders English for deterministic markup. On the client we
-    // resolve the stored / browser language synchronously at module load so
-    // the very first render uses the right language — no post-mount swap,
-    // no flicker between English and Chinese on the login page.
-    lng: resolveInitialLang(),
+    // Always initialize with English so the server-rendered HTML and the
+    // very first client render match. `applyStoredLanguage()` runs from a
+    // root useEffect after hydration and swaps to the user's real language.
+    // This is what prevents the "server said Welcome / client said 歡迎"
+    // hydration mismatch on the login page.
+    lng: "en",
     fallbackLng: "en",
-
     supportedLngs: [...SUPPORTED],
     interpolation: { escapeValue: false },
   });
