@@ -22,6 +22,12 @@ const en = {
     saved: "Saved",
     confirm: "Confirm",
     clear: "Clear",
+    notFoundTitle: "Page not found",
+    notFoundDesc: "The page you're looking for doesn't exist or has been moved.",
+    goHome: "Go home",
+    errorTitle: "This page didn't load",
+    errorDesc: "Something went wrong on our end. You can try refreshing or head back home.",
+    tryAgain: "Try again",
   },
   auth: {
     welcomeBack: "Welcome to Wayfarer",
