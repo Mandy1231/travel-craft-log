@@ -35,11 +35,7 @@ function TripDetail() {
 
   if (!trip) {
     if (isLoading || isFetching) {
-      return (
-        <div className="mx-auto max-w-3xl px-6 py-24 text-center text-muted-foreground">
-          {t("common.loading")}
-        </div>
-      );
+      return <TripDetailSkeleton />;
     }
     return (
       <div className="mx-auto max-w-3xl px-6 py-24 text-center">
