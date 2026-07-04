@@ -13,6 +13,7 @@ export const Route = createFileRoute("/login")({
     meta: [
       { title: "Wayfarer · Sign in" },
       { name: "description", content: "Sign in to Wayfarer to manage your trips." },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: LoginPage,
