@@ -26,10 +26,10 @@ export function LoginLayout({ children }: { children: ReactNode }) {
               <Compass className="h-6 w-6 text-primary" strokeWidth={2.25} />
             </div>
             <h2 className="text-3xl font-bold leading-tight tracking-tight text-foreground">
-              Plan smarter.<br />Travel better.
+              {t("auth.tagline")}
             </h2>
             <p className="mt-4 text-sm text-muted-foreground">
-              Your journey begins<br />with a single plan.
+              {t("auth.taglineSub")}
             </p>
           </div>
           <div className="absolute bottom-12 left-12 flex items-center gap-5 text-primary/70">
