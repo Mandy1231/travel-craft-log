@@ -34,10 +34,15 @@ function LoginPage() {
   return (
     <LoginLayout>
       <div className="mb-6 text-center">
-        <h1 className="font-sans text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+        <h1
+          className="font-sans text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
+          suppressHydrationWarning
+        >
           {heading}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">{sub}</p>
+        <p className="mt-2 text-sm text-muted-foreground" suppressHydrationWarning>
+          {sub}
+        </p>
       </div>
 
       {login.view === "forgot" ? (
