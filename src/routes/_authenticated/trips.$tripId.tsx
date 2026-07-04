@@ -9,6 +9,7 @@ import { TripDialog } from "@/components/TripDialog";
 import { useTripQuery, tripsApi, type Attraction } from "@/lib/trips-store";
 import { DayCard } from "@/components/trip-detail/DayCard";
 import { TripDetailHeader } from "@/components/trip-detail/TripDetailHeader";
+import { TripDetailSkeleton } from "@/components/trip-detail/TripDetailSkeleton";
 import { useDayEditor } from "@/hooks/useDayEditor";
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
