@@ -582,6 +582,14 @@ if (!i18n.isInitialized) {
   });
 }
 
+// Belt-and-braces: even if the singleton was already initialized (HMR, or a
+// prior page in the same SPA session left it in Chinese), force the client
+// back to English right before hydration so the first render matches the
+// server's HTML. `applyStoredLanguage()` runs in a root useEffect and
+// swaps to the user's real language immediately after hydration commits.
+if (typeof window !== "undefined" && i18n.language !== "en") {
+  i18n.changeLanguage("en");
+
 /** Re-apply user-preferred language. Safe to call after mount (client only). */
 export function applyStoredLanguage() {
   if (typeof window === "undefined") return;
