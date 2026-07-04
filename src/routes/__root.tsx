@@ -10,8 +10,8 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+import appCss from "@/styles.css?url";
+import { reportLovableError } from "@/lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { bindQueryClient } from "@/lib/trips-store";
 import { applyStoredLanguage } from "@/i18n";
