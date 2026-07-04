@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Compass, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { messageFromError } from "@/lib/errors";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
