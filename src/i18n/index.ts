@@ -194,6 +194,12 @@ const zhCN = {
     saved: "已保存",
     confirm: "确认",
     clear: "清除",
+    notFoundTitle: "页面未找到",
+    notFoundDesc: "你要找的页面不存在或已被移除。",
+    goHome: "返回首页",
+    errorTitle: "页面加载失败",
+    errorDesc: "发生了一点错误。你可以重试或返回首页。",
+    tryAgain: "重试",
   },
   auth: {
     welcomeBack: "欢迎来到 Wayfarer",
