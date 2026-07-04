@@ -14,6 +14,12 @@ import { toast } from "sonner";
 import { messageFromError } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/profile")({
+  head: () => ({
+    meta: [
+      { title: "个人资料 · Wayfarer" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: ProfilePage,
 });
 
