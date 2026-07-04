@@ -366,6 +366,12 @@ const zhTW = {
     saved: "已儲存",
     confirm: "確認",
     clear: "清除",
+    notFoundTitle: "找不到頁面",
+    notFoundDesc: "你要找的頁面不存在或已被移除。",
+    goHome: "回到首頁",
+    errorTitle: "頁面載入失敗",
+    errorDesc: "發生了一點錯誤。你可以重試或回到首頁。",
+    tryAgain: "重試",
   },
   auth: {
     welcomeBack: "歡迎來到 Wayfarer",
