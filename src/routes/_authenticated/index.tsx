@@ -10,6 +10,12 @@ import { useTripSearch } from "@/hooks/useTripSearch";
 import { copyTripShareLink } from "@/services/share";
 
 export const Route = createFileRoute("/_authenticated/")({
+  head: () => ({
+    meta: [
+      { title: "我的行程 · Wayfarer" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Index,
 });
 
